@@ -30,5 +30,10 @@ services:
             dockerfile: dockerfile
         ports:
             - 8084:8080
+        depends_on:
+            - stock-api
+            - emailing-service
+            - employees-service
+            - supply-service
 
     
