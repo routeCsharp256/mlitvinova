@@ -7,6 +7,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{70F7BB71-7220-4D09-8A8F-E212037D9A78}"
 ProjectSection(SolutionItems) = preProject
 	dockerfile = dockerfile
+	..\README.md = ..\README.md
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MerchandiseService", "src\MerchandiseService\MerchandiseService.csproj", "{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B}"
