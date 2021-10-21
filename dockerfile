@@ -16,12 +16,9 @@ FROM build as publish
 RUN dotnet publish "MerchandiseService.csproj" -c -Release -o /app/publish
 
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443 
-EXPOSE 5000
-EXPOSE 5001
 
 COPY --from=publish /app/publish .
 
