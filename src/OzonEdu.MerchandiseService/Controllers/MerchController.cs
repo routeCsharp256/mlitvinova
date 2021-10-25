@@ -20,12 +20,12 @@ namespace MerchandiseService.Controllers
         }
 
         [HttpGet("{employeeId:long}")]
-        public async Task<ActionResult<List<(MerchPack, MerchPurchaseStatus)>>> GetMerchIssuedToEmployee(
+        public async Task<IActionResult> GetMerchIssuedToEmployee(
             long employeeId, CancellationToken token)
         {
             var merchItem = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
             
-            return merchItem;
+            return Ok(merchItem);
         }
         
         [HttpPost]

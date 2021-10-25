@@ -45,9 +45,9 @@ namespace MerchandiseService.Services
         public Task<List<(MerchPack, MerchPurchaseStatus)>> GetIssuedMerchToEmployee(long employeeId,
             CancellationToken token)
         {
-            if (MerchIssued.TryGetValue(employeeId, out List<(MerchPack, MerchPurchaseStatus)> value))
+            if (MerchIssued.ContainsKey(employeeId))
             {
-                return Task.FromResult(value);
+                return Task.FromResult(MerchIssued[employeeId]);
             }
 
             return Task.FromResult(new List<(MerchPack, MerchPurchaseStatus)>());
