@@ -19,7 +19,7 @@ namespace MerchandiseService.Controllers
             _merchandiseService = service;
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("{employeeId:long}")]
         public async Task<ActionResult<List<(MerchPack, MerchPurchaseStatus)>>> GetMerchIssuedToEmployee(
             long employeeId, CancellationToken token)
         {

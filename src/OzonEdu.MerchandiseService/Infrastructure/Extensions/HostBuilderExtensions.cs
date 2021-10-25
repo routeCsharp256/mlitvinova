@@ -21,13 +21,9 @@ namespace MerchandiseService.Infrastructure.Extensions
                 services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
                 services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo {Title = "OzonEdu.StockApi", Version = "v1"});
+                    options.SwaggerDoc("v1", new OpenApiInfo {Title = "OzonEdu.MerchandiseApi", Version = "v1"});
                 
                     options.CustomSchemaIds(x => x.FullName);
-
-                    var xmlFileName = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
-                    var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
-                    options.IncludeXmlComments(xmlFilePath);
                 });
             });
             return builder;
