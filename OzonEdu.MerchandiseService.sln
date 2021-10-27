@@ -14,13 +14,11 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService", "src\OzonEdu.MerchandiseService\OzonEdu.MerchandiseService.csproj", "{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpModels", "src\OzonEdu.MerchandiseService.HttpModels\OzonEdu.MerchandiseService.HttpModels.csproj", "{315BEB6C-6763-41C6-8ADF-C412CDD658DA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpClient", "src\OzonEdu.MerchandiseService.HttpClient\OzonEdu.MerchandiseService.HttpClient.csproj", "{5CED3B4A-E2B4-44EC-ACB1-BEA6E80F7C7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Grpc", "src\OzonEdu.MerchandiseService.Grpc\OzonEdu.MerchandiseService.Grpc.csproj", "{7B3E541E-F4D0-47F1-BC4C-C3C321A83C96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseApi.HttpModels", "src\OzonEdu.MerchandiseApi.HttpModels\OzonEdu.MerchandiseApi.HttpModels.csproj", "{B9929A4E-2D9F-47A0-85ED-EE560E8F2887}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.HttpModels", "src\OzonEdu.MerchandiseService.HttpModels\OzonEdu.MerchandiseService.HttpModels.csproj", "{B9929A4E-2D9F-47A0-85ED-EE560E8F2887}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.GrpcClient", "src\OzonEdu.MerchandiseService.GrpcClient\OzonEdu.MerchandiseService.GrpcClient.csproj", "{D5EAC903-0494-4BC4-A961-7B7732CBBC54}"
 EndProject
@@ -31,7 +29,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B} = {F284D37A-C469-4A11-9A95-6A28B454B261}
-		{315BEB6C-6763-41C6-8ADF-C412CDD658DA} = {F284D37A-C469-4A11-9A95-6A28B454B261}
 		{5CED3B4A-E2B4-44EC-ACB1-BEA6E80F7C7F} = {F284D37A-C469-4A11-9A95-6A28B454B261}
 		{7B3E541E-F4D0-47F1-BC4C-C3C321A83C96} = {F284D37A-C469-4A11-9A95-6A28B454B261}
 		{B9929A4E-2D9F-47A0-85ED-EE560E8F2887} = {F284D37A-C469-4A11-9A95-6A28B454B261}
@@ -42,10 +39,6 @@ Global
 		{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09A758AE-58F0-451A-A2FD-0BFF5F5E7B0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{315BEB6C-6763-41C6-8ADF-C412CDD658DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{315BEB6C-6763-41C6-8ADF-C412CDD658DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{315BEB6C-6763-41C6-8ADF-C412CDD658DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{315BEB6C-6763-41C6-8ADF-C412CDD658DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5CED3B4A-E2B4-44EC-ACB1-BEA6E80F7C7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CED3B4A-E2B4-44EC-ACB1-BEA6E80F7C7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CED3B4A-E2B4-44EC-ACB1-BEA6E80F7C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU

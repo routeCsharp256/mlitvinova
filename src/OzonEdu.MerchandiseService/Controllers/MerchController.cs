@@ -20,7 +20,7 @@ namespace MerchandiseService.Controllers
         }
 
         [HttpGet("{employeeId:long}")]
-        public async Task<IActionResult> GetMerchIssuedToEmployee(
+        public async Task<ActionResult<List<(string merchPackName, MerchPurchaseStatus status)>>> GetMerchIssuedToEmployee(
             long employeeId, CancellationToken token)
         {
             var merchItem = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
@@ -29,10 +29,28 @@ namespace MerchandiseService.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> IssueMerchToEmployee(long employeeId, MerchPack pack, CancellationToken token)
+        public async Task<ActionResult> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
         {
-            await _merchandiseService.IssueMerchToEmployee(employeeId, pack, token);
+            var success = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
+            if (!success)
+            {
+                return Problem($"Failed to issue {merchPackName} to {employeeId}");
+            }
+            
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<MerchPack>> GetMerchPackContent(string merchPackName, CancellationToken token)
+        {
+            var merchPackDetails = await _merchandiseService.GetMerchPackContent(merchPackName, token);
+
+            if (merchPackDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(merchPackDetails);
         }
     }
 }

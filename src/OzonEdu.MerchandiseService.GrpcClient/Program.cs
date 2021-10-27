@@ -6,25 +6,25 @@ using OzonEdu.StockApi.Grpc;
 
 using var channel = GrpcChannel.ForAddress("https://localhost:5001");
 var client = new MerchandiseApiGrpc.MerchandiseApiGrpcClient(channel);
-
-var clientStreamingCall = client.IssueMerchToEmployeeStreaming(cancellationToken: CancellationToken.None);
-await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
-{
-    EmployeeId = 1,
-    Pack = new MerchPack()
-});
-
-await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
-{
-    EmployeeId = 1,
-    Pack = new MerchPack()
-});
-
-var allClientMerchStream = client.GetEmployeeIssuedMerchStreaming(
-new GetMerchIssuedToEmployeeRequest()
-{
-    EmployeeId = 1
-});
+//
+// var clientStreamingCall = client.IssueMerchToEmployeeStreaming(cancellationToken: CancellationToken.None);
+// await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
+// {
+//     EmployeeId = 1,
+//     Pack = new MerchPack()
+// });
+//
+// await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
+// {
+//     EmployeeId = 1,
+//     Pack = new MerchPack()
+// });
+//
+// var allClientMerchStream = client.GetEmployeeIssuedMerchStreaming(
+// new GetMerchIssuedToEmployeeRequest()
+// {
+//     EmployeeId = 1
+// });
 
 // await foreach (var pack in allClientMerchStream.ResponseStream.ReadAllAsync())
 // {

@@ -9,6 +9,8 @@ service MerchandiseApiGrpc {
   rpc GetEmployeeIssuedMerchStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
 
   rpc IssueMerchToEmployeeStreaming (stream IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
+  
+  rpc GetMerchPackContent (GetMerchPackContentRequest) returns (GetMerchPackContentResponse);
 }
 
 message GetMerchIssuedToEmployeeRequest {
@@ -21,17 +23,25 @@ message GetMerchIssuedToEmployeeResponse {
 
 message IssueMerchToEmployeeRequest {
   int64 employee_id = 1;
-  MerchPack pack = 2;
+  string merch_pack_name = 2;
+}
+
+message GetMerchPackContentRequest {
+  string merch_pack_name = 1;
+}
+
+message GetMerchPackContentResponse {
+  MerchPack merch_pack = 1;
 }
 
 message MerchPackInStatus {
-  MerchPack pack = 1;
+  string merch_pack_name = 1;
   MerchPackStatus status = 2;
 }
 
 message MerchPack {
-  repeated MerchItem items = 1;
-  string merch_pack_name = 2;
+  string merch_pack_name = 1;
+  repeated MerchItem pack_items = 2;
 }
 
 message MerchItem {

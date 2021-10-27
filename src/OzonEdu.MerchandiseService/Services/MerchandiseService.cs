@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MerchandiseService.Models;
@@ -9,40 +10,66 @@ namespace MerchandiseService.Services
 {
     public class MerchandiseService : IMerchandiseService
     {
-        private static MerchPack StarterPack = new MerchPack("Starter pack", new List<MerchItem>()
-        {
-            new MerchItem("Блокнот", new Dictionary<string, string>()
+        #region TestData
+       
+        private MerchPack StarterPack => new MerchPack(
+            "Starter pack", new List<MerchItem>()
             {
-                {"Цвет", "Красный"}
-            })
-        });
-
-        private readonly Dictionary<long, List<(MerchPack, MerchPurchaseStatus)>> MerchIssued = new()
-        {
-            {
-                1, new List<(MerchPack, MerchPurchaseStatus)>()
+                new MerchItem("Блокнот", new Dictionary<string, string>()
                 {
-                    (StarterPack, MerchPurchaseStatus.Issued)
+                    {"Цвет", "Красный"}
+                })
+            });
+        
+        private MerchPack WelcomePack => new MerchPack(
+            "Welcome pack", new List<MerchItem>()
+            {
+                new MerchItem("Ручка", new Dictionary<string, string>()
+                {
+                    {"Цвет", "Синий"}
+                })
+            });
+        
+        private List<MerchPack> AvailablePacks => new List<MerchPack>
+        {
+            StarterPack,
+            WelcomePack
+        };
+            
+        private Dictionary<long, List<(string, MerchPurchaseStatus)>> MerchIssued => new()
+        {
+            {
+                1, new List<(string, MerchPurchaseStatus)>()
+                {
+                    ("Starter pack", MerchPurchaseStatus.Issued)
                 }
             }
         };
+        
+        #endregion
 
-        public Task IssueMerchToEmployee(long employeeId, MerchPack pack, CancellationToken token)
+        public Task<bool> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
         {
-            var itemToAdd = (pack, MerchPurchaseStatus.Issuing);
+            if (!AvailablePacks.Any(x => x.MerchPackName.Equals(merchPackName)))
+            {
+                return Task.FromResult(false);
+            }
+            
+            var itemToAdd = (merchPackName, MerchPurchaseStatus.Issuing);
             if (MerchIssued.ContainsKey(employeeId))
             {
                 MerchIssued[employeeId].Add(itemToAdd);
             }
             else
             {
-                MerchIssued.Add(employeeId, new List<(MerchPack, MerchPurchaseStatus)>() { itemToAdd });
+                MerchIssued.Add(employeeId, new List<(string, MerchPurchaseStatus)>() { itemToAdd });
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
 
-        public Task<List<(MerchPack, MerchPurchaseStatus)>> GetIssuedMerchToEmployee(long employeeId,
+        public Task<List<(string merchPackName, MerchPurchaseStatus status)>> GetIssuedMerchToEmployee(
+            long employeeId,
             CancellationToken token)
         {
             if (MerchIssued.ContainsKey(employeeId))
@@ -50,7 +77,13 @@ namespace MerchandiseService.Services
                 return Task.FromResult(MerchIssued[employeeId]);
             }
 
-            return Task.FromResult(new List<(MerchPack, MerchPurchaseStatus)>());
+            return Task.FromResult(new List<(string, MerchPurchaseStatus)>());
+        }
+
+        public Task<MerchPack?> GetMerchPackContent(string merchPackName, CancellationToken token)
+        {
+            var packDetails = AvailablePacks.FirstOrDefault(x => x.MerchPackName.Equals(merchPackName));
+            return Task.FromResult(packDetails);
         }
     }
 }

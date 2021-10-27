@@ -31,15 +31,7 @@ namespace MerchandiseService.GrpcServices
                 await requestStream.MoveNext();
                 var currentItem = requestStream.Current;
 
-                var packName = currentItem.Pack.MerchPackName;
-                var items = currentItem.Pack.Items
-                    .Select(x =>
-                        new MerchItem(
-                            x.MerchName, 
-                            x.Properties.ToDictionary(y => y.PropertyName, y => y.PropertyValue)))
-                    .ToList();
-                
-                await _service.IssueMerchToEmployee(currentItem.EmployeeId, new Models.MerchPack(packName, items), context.CancellationToken);
+                await _service.IssueMerchToEmployee(currentItem.EmployeeId, currentItem.MerchPackName, context.CancellationToken);
             }
 
             return new Empty();
@@ -58,18 +50,46 @@ namespace MerchandiseService.GrpcServices
                     break;
                 }
 
-                var status = item.Item2 switch
+                var status = item.status switch
                 {
                     MerchPurchaseStatus.Issued => MerchPackStatus.Issued,
                     MerchPurchaseStatus.Issuing => MerchPackStatus.Issuing,
                     _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid status"))
                 };
 
-                var pack = new MerchPack()
+                await responseStream.WriteAsync(new GetMerchIssuedToEmployeeResponse()
                 {
-                    Items =
+                    Merch =
                     {
-                        item.Item1.PackItems.Select(x => new OzonEdu.StockApi.Grpc.MerchItem
+                        new MerchPackInStatus()
+                        {
+                            MerchPackName = item.merchPackName,
+                            Status = status
+                        }
+                    }
+                });
+            }
+        }
+
+        public override async Task<GetMerchPackContentResponse> GetMerchPackContent(GetMerchPackContentRequest request,
+            ServerCallContext context)
+        {
+            var packContent = await _service.GetMerchPackContent(request.MerchPackName, context.CancellationToken);
+
+            if (packContent is null)
+            {
+                throw new RpcException(
+                    new Status(StatusCode.InvalidArgument, $"Merch pack {request.MerchPackName} not found"));
+            }
+            
+            return new GetMerchPackContentResponse
+            {
+                MerchPack = new MerchPack()
+                {
+                    MerchPackName = packContent.MerchPackName,
+                    PackItems =
+                    {
+                        packContent.PackItems.Select(x => new OzonEdu.StockApi.Grpc.MerchItem()
                         {
                             MerchName = x.Name,
                             Properties = { x.Properties.Select(y => new Property()
@@ -79,20 +99,8 @@ namespace MerchandiseService.GrpcServices
                             }) }
                         })
                     }
-                };
-
-                await responseStream.WriteAsync(new GetMerchIssuedToEmployeeResponse()
-                {
-                    Merch =
-                    {
-                        new MerchPackInStatus()
-                        {
-                            Pack = pack,
-                            Status = status
-                        }
-                    }
-                });
-            }
+                }
+            };
         }
     }
 }

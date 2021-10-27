@@ -7,8 +7,10 @@ namespace MerchandiseService.Services.Interfaces
 {
     public interface IMerchandiseService
     {
-        Task IssueMerchToEmployee(long employeeId, MerchPack pack, CancellationToken token);
+        Task<bool> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token);
 
-        Task<List<(MerchPack, MerchPurchaseStatus)>> GetIssuedMerchToEmployee(long employeeId, CancellationToken token);
+        Task<List<(string merchPackName, MerchPurchaseStatus status)>> GetIssuedMerchToEmployee(long employeeId, CancellationToken token);
+
+        Task<MerchPack?> GetMerchPackContent(string merchPackName, CancellationToken token);
     }
 }
