@@ -3,7 +3,7 @@
     public enum MerchIssueRequestStatus
     {
         RequestCreated,
-        NoSuchEmployeeExists,
+        NoSuchMerchExists,
         EmployeeAlreadyHasSuchMerch
     }
 }

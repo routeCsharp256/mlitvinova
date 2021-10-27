@@ -1,3 +1,4 @@
+using MerchandiseService.GrpcServices;
 using MerchandiseService.Infrastructure.Interceptors;
 using MerchandiseService.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -21,7 +22,7 @@ namespace MerchandiseService
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapGrpcService<StockApiGrpService>();
+                endpoints.MapGrpcService<MerchApiGrpService>();
                 endpoints.MapControllers();
             });
         }

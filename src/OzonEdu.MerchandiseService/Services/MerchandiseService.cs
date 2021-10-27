@@ -53,7 +53,7 @@ namespace MerchandiseService.Services
         {
             if (!AvailablePacks.Any(x => x.MerchPackName.Equals(merchPackName)))
             {
-                return Task.FromResult(MerchIssueRequestStatus.NoSuchEmployeeExists);
+                return Task.FromResult(MerchIssueRequestStatus.NoSuchMerchExists);
             }
 
             var itemToAdd = new MerchPackInStatus(merchPackName, MerchPurchaseStatus.Issuing);

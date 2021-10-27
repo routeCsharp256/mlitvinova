@@ -35,7 +35,7 @@ namespace MerchandiseService.Controllers
             switch (status)
             {
                 case MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch:
-                case MerchIssueRequestStatus.NoSuchEmployeeExists:
+                case MerchIssueRequestStatus.NoSuchMerchExists:
                     return Problem($"Failed to issue {merchPackName} to {employeeId}: {status}");
                 case MerchIssueRequestStatus.RequestCreated:
                     return Ok();
