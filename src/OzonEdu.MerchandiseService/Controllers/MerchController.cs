@@ -20,7 +20,7 @@ namespace MerchandiseService.Controllers
         }
 
         [HttpGet("{employeeId:long}")]
-        public async Task<ActionResult<List<(string merchPackName, MerchPurchaseStatus status)>>> GetMerchIssuedToEmployee(
+        public async Task<ActionResult<List<MerchPackInStatus>>> GetMerchIssuedToEmployee(
             long employeeId, CancellationToken token)
         {
             var merchItem = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
@@ -31,13 +31,17 @@ namespace MerchandiseService.Controllers
         [HttpPost]
         public async Task<ActionResult> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
         {
-            var success = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
-            if (!success)
+            var status = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
+            switch (status)
             {
-                return Problem($"Failed to issue {merchPackName} to {employeeId}");
+                case MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch:
+                case MerchIssueRequestStatus.NoSuchEmployeeExists:
+                    return Problem($"Failed to issue {merchPackName} to {employeeId}: {status}");
+                case MerchIssueRequestStatus.RequestCreated:
+                    return Ok();
             }
-            
-            return Ok();
+
+            return Problem($"Unknown status {status}");
         }
 
         [HttpGet]

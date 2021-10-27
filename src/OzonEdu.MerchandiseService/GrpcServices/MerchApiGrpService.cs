@@ -11,6 +11,7 @@ using MerchandiseService.Services.Interfaces;
 using OzonEdu.StockApi.Grpc;
 using MerchItem = MerchandiseService.Models.MerchItem;
 using MerchPack = OzonEdu.StockApi.Grpc.MerchPack;
+using MerchPackInStatus = OzonEdu.StockApi.Grpc.MerchPackInStatus;
 
 namespace MerchandiseService.GrpcServices
 {
@@ -50,7 +51,7 @@ namespace MerchandiseService.GrpcServices
                     break;
                 }
 
-                var status = item.status switch
+                var status = item.Status switch
                 {
                     MerchPurchaseStatus.Issued => MerchPackStatus.Issued,
                     MerchPurchaseStatus.Issuing => MerchPackStatus.Issuing,
@@ -63,7 +64,7 @@ namespace MerchandiseService.GrpcServices
                     {
                         new MerchPackInStatus()
                         {
-                            MerchPackName = item.merchPackName,
+                            MerchPackName = item.MerchPackName,
                             Status = status
                         }
                     }

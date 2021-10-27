@@ -11,8 +11,8 @@ namespace MerchandiseService.Services
     public class MerchandiseService : IMerchandiseService
     {
         #region TestData
-       
-        private MerchPack StarterPack => new MerchPack(
+
+        private static readonly MerchPack StarterPack = new MerchPack(
             "Starter pack", new List<MerchItem>()
             {
                 new MerchItem("Блокнот", new Dictionary<string, string>()
@@ -20,8 +20,8 @@ namespace MerchandiseService.Services
                     {"Цвет", "Красный"}
                 })
             });
-        
-        private MerchPack WelcomePack => new MerchPack(
+
+        private static readonly MerchPack WelcomePack = new MerchPack(
             "Welcome pack", new List<MerchItem>()
             {
                 new MerchItem("Ручка", new Dictionary<string, string>()
@@ -29,55 +29,61 @@ namespace MerchandiseService.Services
                     {"Цвет", "Синий"}
                 })
             });
-        
-        private List<MerchPack> AvailablePacks => new List<MerchPack>
+
+        private static readonly List<MerchPack> AvailablePacks = new List<MerchPack>
         {
             StarterPack,
             WelcomePack
         };
-            
-        private Dictionary<long, List<(string, MerchPurchaseStatus)>> MerchIssued => new()
+
+        private readonly Dictionary<long, List<MerchPackInStatus>> _merchIssued = new()
         {
             {
-                1, new List<(string, MerchPurchaseStatus)>()
+                1, new List<MerchPackInStatus>()
                 {
-                    ("Starter pack", MerchPurchaseStatus.Issued)
+                    new MerchPackInStatus("Starter pack", MerchPurchaseStatus.Issued)
                 }
             }
         };
-        
+
         #endregion
 
-        public Task<bool> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
+        public Task<MerchIssueRequestStatus> IssueMerchToEmployee(long employeeId, string merchPackName,
+            CancellationToken token)
         {
             if (!AvailablePacks.Any(x => x.MerchPackName.Equals(merchPackName)))
             {
-                return Task.FromResult(false);
-            }
-            
-            var itemToAdd = (merchPackName, MerchPurchaseStatus.Issuing);
-            if (MerchIssued.ContainsKey(employeeId))
-            {
-                MerchIssued[employeeId].Add(itemToAdd);
-            }
-            else
-            {
-                MerchIssued.Add(employeeId, new List<(string, MerchPurchaseStatus)>() { itemToAdd });
+                return Task.FromResult(MerchIssueRequestStatus.NoSuchEmployeeExists);
             }
 
-            return Task.FromResult(true);
+            var itemToAdd = new MerchPackInStatus(merchPackName, MerchPurchaseStatus.Issuing);
+            if (_merchIssued.ContainsKey(employeeId))
+            {
+                var merchIssuedToEmployee = _merchIssued[employeeId];
+                if (merchIssuedToEmployee.Any(x => x.MerchPackName.Equals(merchPackName)))
+                {
+                    return Task.FromResult(MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch);
+                }
+
+                merchIssuedToEmployee.Add(itemToAdd);
+                return Task.FromResult(MerchIssueRequestStatus.RequestCreated);
+            }
+
+            _merchIssued.Add(employeeId, new List<MerchPackInStatus>() {itemToAdd});
+            return Task.FromResult(MerchIssueRequestStatus.RequestCreated);
         }
 
-        public Task<List<(string merchPackName, MerchPurchaseStatus status)>> GetIssuedMerchToEmployee(
+        public Task<List<MerchPackInStatus>> GetIssuedMerchToEmployee(
             long employeeId,
             CancellationToken token)
         {
-            if (MerchIssued.ContainsKey(employeeId))
+            if (_merchIssued.ContainsKey(employeeId))
             {
-                return Task.FromResult(MerchIssued[employeeId]);
+                var result = _merchIssued[employeeId];
+                return Task.FromResult(result);
             }
 
-            return Task.FromResult(new List<(string, MerchPurchaseStatus)>());
+            return Task.FromResult(new List<MerchPackInStatus>());
         }
 
         public Task<MerchPack?> GetMerchPackContent(string merchPackName, CancellationToken token)
