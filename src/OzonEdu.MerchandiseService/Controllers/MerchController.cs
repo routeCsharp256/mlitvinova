@@ -52,19 +52,23 @@ namespace OzonEdu.MerchandiseService.Controllers
         }
         
         [HttpPost("IssueMerchToEmployee")]
-        public async Task<ActionResult> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
+        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
         {
             var status = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
-            switch (status)
+            var requestStatus = status switch
             {
-                case MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch:
-                case MerchIssueRequestStatus.NoSuchMerchExists:
-                    return Problem($"Failed to issue {merchPackName} to {employeeId}: {status}");
-                case MerchIssueRequestStatus.RequestCreated:
-                    return Ok();
-            }
+                MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch => IssueMerchResponse.MerchAlreadyIssued,
+                MerchIssueRequestStatus.NoSuchMerchExists => IssueMerchResponse.NoSuchMerch,
+                MerchIssueRequestStatus.RequestCreated => IssueMerchResponse.Created,
+                _ => IssueMerchResponse.Unknown
+            };
 
-            return Problem($"Unknown status {status}");
+            var result = new IssueMerchToEmployeeResponse()
+            {
+                IssueMerchResponse = requestStatus
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("GetMerchPackContent")]

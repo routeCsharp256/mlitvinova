@@ -9,5 +9,9 @@ namespace OzonEdu.MerchandiseService.HttpClient
     {
         Task<GetMerchPackDetailsResponse> V1GetMerchPackDetails(string name, CancellationToken token);
         Task<GetMerchPackIssuedToEmployeeResponse> V1GetMerchIssuedToEmployee(long employeeId, CancellationToken token);
+
+        Task<IssueMerchToEmployeeResponse> V1IssueMerchToEmployee(long employeeId, string merchName,
+            CancellationToken token);
+
     }
 }

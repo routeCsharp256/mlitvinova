@@ -30,11 +30,15 @@ namespace OzonEdu.MerchandiseService.HttpClient
             return JsonSerializer.Deserialize<GetMerchPackIssuedToEmployeeResponse>(body);
         }
         
-        // public async Task<GetMerchPackIssuedToEmployeeResponse> V1GetMerchIssuedToEmployee(long employeeId, CancellationToken token)
-        // {
-        //     using var response = await _httpClient.GetAsync($"v1/api/GetMerchIssuedToEmployee?employeeId={employeeId}", token);
-        //     var body = await response.Content.ReadAsStringAsync(token);
-        //     return JsonSerializer.Deserialize<GetMerchPackIssuedToEmployeeResponse>(body);
-        // }
+        public async Task<IssueMerchToEmployeeResponse> V1IssueMerchToEmployee(long employeeId, string merchName,
+            CancellationToken token)
+        {
+            using var response = await _httpClient.PostAsync(
+                $"/v1/api/merch/IssueMerchToEmployee?employeeId={employeeId}&merchPackName={merchName}", 
+                null,
+                token);
+            var body = await response.Content.ReadAsStringAsync(token);
+            return JsonSerializer.Deserialize<IssueMerchToEmployeeResponse>(body);
+        }
     }
 }
