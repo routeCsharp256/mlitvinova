@@ -9,7 +9,7 @@ namespace MerchandiseService.Services
 {
     public class MerchandiseService : IMerchandiseService
     {
-        private static MerchPack StarterPack = new MerchPack(new List<MerchItem>()
+        private static MerchPack StarterPack = new MerchPack("Starter pack", new List<MerchItem>()
         {
             new MerchItem("Блокнот", new Dictionary<string, string>()
             {

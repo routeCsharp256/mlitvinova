@@ -31,6 +31,7 @@ namespace MerchandiseService.GrpcServices
                 await requestStream.MoveNext();
                 var currentItem = requestStream.Current;
 
+                var packName = currentItem.Pack.MerchPackName;
                 var items = currentItem.Pack.Items
                     .Select(x =>
                         new MerchItem(
@@ -38,7 +39,7 @@ namespace MerchandiseService.GrpcServices
                             x.Properties.ToDictionary(y => y.PropertyName, y => y.PropertyValue)))
                     .ToList();
                 
-                await _service.IssueMerchToEmployee(currentItem.EmployeeId, new Models.MerchPack(items), context.CancellationToken);
+                await _service.IssueMerchToEmployee(currentItem.EmployeeId, new Models.MerchPack(packName, items), context.CancellationToken);
             }
 
             return new Empty();

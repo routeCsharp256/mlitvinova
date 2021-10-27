@@ -4,10 +4,13 @@ namespace MerchandiseService.Models
 {
     public class MerchPack
     {
-        public MerchPack(List<MerchItem> packItems)
+        public MerchPack(string merchPackName, List<MerchItem> packItems)
         {
-            this.PackItems = packItems;
+            MerchPackName = merchPackName;
+            PackItems = packItems;
         }
+
+        public string MerchPackName { get; }
         
         public List<MerchItem> PackItems { get; }
     }

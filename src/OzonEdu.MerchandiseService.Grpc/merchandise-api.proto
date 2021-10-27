@@ -31,6 +31,7 @@ message MerchPackInStatus {
 
 message MerchPack {
   repeated MerchItem items = 1;
+  string merch_pack_name = 2;
 }
 
 message MerchItem {
