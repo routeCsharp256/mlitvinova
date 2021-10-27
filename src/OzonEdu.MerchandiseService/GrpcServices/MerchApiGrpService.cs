@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using MerchandiseService.Models;
-using MerchandiseService.Services.Interfaces;
+using OzonEdu.MerchandiseService.Models;
+using OzonEdu.MerchandiseService.Services.Interfaces;
 using OzonEdu.StockApi.Grpc;
-using MerchItem = MerchandiseService.Models.MerchItem;
 using MerchPack = OzonEdu.StockApi.Grpc.MerchPack;
 using MerchPackInStatus = OzonEdu.StockApi.Grpc.MerchPackInStatus;
 
-namespace MerchandiseService.GrpcServices
+namespace OzonEdu.MerchandiseService.GrpcServices
 {
     public class MerchApiGrpService : MerchandiseApiGrpc.MerchandiseApiGrpcBase
     {
@@ -24,15 +20,20 @@ namespace MerchandiseService.GrpcServices
             _service = service;
         }
 
-        public override async Task<Empty> IssueMerchToEmployeeStreaming(
-            IAsyncStreamReader<IssueMerchToEmployeeRequest> requestStream, ServerCallContext context)
-        {            
-            while (!context.CancellationToken.IsCancellationRequested)
-            {
-                await requestStream.MoveNext();
-                var currentItem = requestStream.Current;
+        public override async Task<Empty> IssueMerchToEmployee(IssueMerchToEmployeeRequest request,
+            ServerCallContext context)
+        {
+            var result = await _service.IssueMerchToEmployee(
+                request.EmployeeId,
+                request.MerchPackName,
+                context.CancellationToken);
 
-                await _service.IssueMerchToEmployee(currentItem.EmployeeId, currentItem.MerchPackName, context.CancellationToken);
+            if (result == MerchIssueRequestStatus.NoSuchMerchExists ||
+                result == MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch)
+            {
+                throw new RpcException(
+                    new Status(StatusCode.InvalidArgument, $"Request initiation failed: {result}"),
+                    new Metadata {new Metadata.Entry("Error", result.ToString())});
             }
 
             return new Empty();
@@ -82,7 +83,7 @@ namespace MerchandiseService.GrpcServices
                 throw new RpcException(
                     new Status(StatusCode.InvalidArgument, $"Merch pack {request.MerchPackName} not found"));
             }
-            
+
             return new GetMerchPackContentResponse
             {
                 MerchPack = new MerchPack()
@@ -93,11 +94,14 @@ namespace MerchandiseService.GrpcServices
                         packContent.PackItems.Select(x => new OzonEdu.StockApi.Grpc.MerchItem()
                         {
                             MerchName = x.Name,
-                            Properties = { x.Properties.Select(y => new Property()
+                            Properties =
                             {
-                                PropertyName = y.Key,
-                                PropertyValue = y.Value
-                            }) }
+                                x.Properties.Select(y => new Property()
+                                {
+                                    PropertyName = y.Key,
+                                    PropertyValue = y.Value
+                                })
+                            }
                         })
                     }
                 }

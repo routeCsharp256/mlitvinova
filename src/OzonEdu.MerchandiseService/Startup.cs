@@ -1,12 +1,11 @@
-using MerchandiseService.GrpcServices;
-using MerchandiseService.Infrastructure.Interceptors;
-using MerchandiseService.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OzonEdu.MerchandiseService.GrpcServices;
+using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
+using OzonEdu.MerchandiseService.Services.Interfaces;
 
-namespace MerchandiseService
+namespace OzonEdu.MerchandiseService
 {
     public class Startup
     {

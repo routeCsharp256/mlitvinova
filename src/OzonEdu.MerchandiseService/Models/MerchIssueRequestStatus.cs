@@ -1,4 +1,4 @@
-﻿namespace MerchandiseService.Models
+﻿namespace OzonEdu.MerchandiseService.Models
 {
     public enum MerchIssueRequestStatus
     {

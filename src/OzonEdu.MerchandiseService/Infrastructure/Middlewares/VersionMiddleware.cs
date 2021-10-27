@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
-namespace MerchandiseService.Infrastructure.Middlewares
+namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 {
     public class VersionMiddleware
     {

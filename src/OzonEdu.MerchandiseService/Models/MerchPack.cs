@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MerchandiseService.Models
+namespace OzonEdu.MerchandiseService.Models
 {
     public class MerchPack
     {

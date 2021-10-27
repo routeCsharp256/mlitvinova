@@ -1,7 +1,7 @@
-using MerchandiseService;
-using MerchandiseService.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using OzonEdu.MerchandiseService;
+using OzonEdu.MerchandiseService.Infrastructure.Extensions;
 
 CreateHostBuilder(args).Build().Run();
 

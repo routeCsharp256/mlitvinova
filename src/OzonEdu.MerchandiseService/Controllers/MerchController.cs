@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MerchandiseService.Models;
-using MerchandiseService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseService.Models;
+using OzonEdu.MerchandiseService.Services.Interfaces;
 
-namespace MerchandiseService.Controllers
+namespace OzonEdu.MerchandiseService.Controllers
 {
     [ApiController]
     [Route("v1/api/merch")]

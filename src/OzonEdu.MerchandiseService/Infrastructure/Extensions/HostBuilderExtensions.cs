@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using MerchandiseService.Infrastructure.Filters;
-using MerchandiseService.Infrastructure.StartupFilters;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OzonEdu.MerchandiseService.Infrastructure.Filters;
+using OzonEdu.MerchandiseService.Infrastructure.StartupFilters;
 
-namespace MerchandiseService.Infrastructure.Extensions
+namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 {
     public static class HostBuilderExtensions
     {

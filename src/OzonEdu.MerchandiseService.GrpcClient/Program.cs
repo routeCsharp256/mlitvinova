@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Grpc.Core;
 using Grpc.Net.Client;
@@ -7,37 +8,53 @@ using OzonEdu.StockApi.Grpc;
 using var channel = GrpcChannel.ForAddress("https://localhost:5001");
 var client = new MerchandiseApiGrpc.MerchandiseApiGrpcClient(channel);
 
-var clientStreamingCall = client.IssueMerchToEmployeeStreaming(cancellationToken: CancellationToken.None);
-await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
+try
 {
-    EmployeeId = 1,
-    MerchPackName = "Starter pack"
-});
+    await client.IssueMerchToEmployeeAsync(
+        new IssueMerchToEmployeeRequest
+        {
+            EmployeeId = 1,
+            MerchPackName = "Starter pack"
+        },
+        cancellationToken: CancellationToken.None);
+}
+catch (RpcException e)
+{
+    Console.WriteLine($"Failed to add: {e.Status}");
+    var metadata = e.Trailers;
+    var error = metadata.FirstOrDefault(x => x.Key == "Error");
+    Console.WriteLine(error);
+}
 
-await clientStreamingCall.RequestStream.WriteAsync(new IssueMerchToEmployeeRequest
+try
 {
-    EmployeeId = 1,
-    MerchPackName = "Welcome pack"
-});
+    await client.IssueMerchToEmployeeAsync(
+        new IssueMerchToEmployeeRequest
+        {
+            EmployeeId = 1,
+            MerchPackName = "Welcome pack"
+        },
+        cancellationToken: CancellationToken.None);
+}
+catch (RpcException e)
+{
+    Console.WriteLine($"Failed to add: {e.Status}");
+    var metadata = e.Trailers;
+    var error = metadata.FirstOrDefault(x => x.Key == "Error");
+    Console.WriteLine(error);
+}
 
 var allClientMerchStream = client.GetEmployeeIssuedMerchStreaming(
-new GetMerchIssuedToEmployeeRequest()
-{
-    EmployeeId = 1
-});
+    new GetMerchIssuedToEmployeeRequest()
+    {
+        EmployeeId = 1
+    });
 
+Console.WriteLine($"Merch packs");
 await foreach (var pack in allClientMerchStream.ResponseStream.ReadAllAsync())
 {
-    Console.WriteLine($"Merch packs");
     foreach (var item in pack.Merch)
     {
         Console.WriteLine($"Pack - {item.MerchPackName}, Status - {item.Status}");
     }
 }
-
-
-// var response = await client.GetAllStockItemsAsync(new GetAllStockItemsRequest(), cancellationToken: CancellationToken.None);
-// foreach (var item in response.Stocks)
-// {
-//     Console.WriteLine($"item id {item.ItemId} - quantity {item.Quantity}");
-// }

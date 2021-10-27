@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MerchandiseService.Models;
+using OzonEdu.MerchandiseService.Models;
 
-namespace MerchandiseService.Services.Interfaces
+namespace OzonEdu.MerchandiseService.Services.Interfaces
 {
     public interface IMerchandiseService
     {

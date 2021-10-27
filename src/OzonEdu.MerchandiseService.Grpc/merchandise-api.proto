@@ -8,7 +8,7 @@ import "google/protobuf/wrappers.proto";
 service MerchandiseApiGrpc {
   rpc GetEmployeeIssuedMerchStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
 
-  rpc IssueMerchToEmployeeStreaming (stream IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
+  rpc IssueMerchToEmployee (IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
   
   rpc GetMerchPackContent (GetMerchPackContentRequest) returns (GetMerchPackContentResponse);
 }
