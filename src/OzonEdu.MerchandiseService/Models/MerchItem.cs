@@ -7,7 +7,7 @@ namespace OzonEdu.MerchandiseService.Models
         public MerchItem(string name, Dictionary<string, string> properties = null)
         {
             this.Name = name;
-            this.Properties = properties ?? new Dictionary<string, string>();
+            this.Properties = properties;
         }
         
         public string Name { get; }

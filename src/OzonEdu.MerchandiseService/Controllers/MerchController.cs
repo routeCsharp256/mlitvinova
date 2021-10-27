@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseService.HttpModels;
 using OzonEdu.MerchandiseService.Models;
 using OzonEdu.MerchandiseService.Services.Interfaces;
+using MerchItem = OzonEdu.MerchandiseService.Models.MerchItem;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
@@ -19,16 +23,35 @@ namespace OzonEdu.MerchandiseService.Controllers
             _merchandiseService = service;
         }
 
-        [HttpGet("{employeeId:long}")]
-        public async Task<ActionResult<List<MerchPackInStatus>>> GetMerchIssuedToEmployee(
+        [HttpGet("GetMerchIssuedToEmployee")]
+        public async Task<ActionResult<GetMerchPackIssuedToEmployeeResponse>> GetMerchIssuedToEmployee(
             long employeeId, CancellationToken token)
         {
-            var merchItem = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
+            var merchIssued = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
+
+            var convertedMerchIssued = new GetMerchPackIssuedToEmployeeResponse()
+            {
+                MerchList = merchIssued.Select(x =>
+                {
+                    var status = x.Status switch
+                    {
+                        MerchPurchaseStatus.Issued => MerchPackStatus.Issued,
+                        MerchPurchaseStatus.Issuing => MerchPackStatus.Issuing,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    
+                    return new MerchandiseService.HttpModels.MerchPackInStatus()
+                    {
+                        MerchPackName = x.MerchPackName,
+                        Status = status
+                    };
+                }).ToList()
+            };
             
-            return Ok(merchItem);
+            return Ok(convertedMerchIssued);
         }
         
-        [HttpPost]
+        [HttpPost("IssueMerchToEmployee")]
         public async Task<ActionResult> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
         {
             var status = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
@@ -44,8 +67,8 @@ namespace OzonEdu.MerchandiseService.Controllers
             return Problem($"Unknown status {status}");
         }
 
-        [HttpGet]
-        public async Task<ActionResult<MerchPack>> GetMerchPackContent(string merchPackName, CancellationToken token)
+        [HttpGet("GetMerchPackContent")]
+        public async Task<ActionResult<GetMerchPackDetailsResponse>> GetMerchPackContent(string merchPackName, CancellationToken token)
         {
             var merchPackDetails = await _merchandiseService.GetMerchPackContent(merchPackName, token);
 
@@ -54,7 +77,17 @@ namespace OzonEdu.MerchandiseService.Controllers
                 return NotFound();
             }
 
-            return Ok(merchPackDetails);
+            var convertedResult = new GetMerchPackDetailsResponse()
+            {
+                PackName = merchPackDetails.MerchPackName,
+                Items = merchPackDetails.PackItems.Select(x => new MerchPackItem()
+                {
+                    Name = x.Name,
+                    Properties = x.Properties
+                }).ToList()
+            };
+
+            return Ok(convertedResult);
         }
     }
 }

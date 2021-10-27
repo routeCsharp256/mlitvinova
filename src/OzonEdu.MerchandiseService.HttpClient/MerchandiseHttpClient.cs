@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using OzonEdu.MerchandiseService.Models;
+using OzonEdu.MerchandiseService.HttpModels;
 
 namespace OzonEdu.MerchandiseService.HttpClient
 {
@@ -15,11 +15,26 @@ namespace OzonEdu.MerchandiseService.HttpClient
             _httpClient = client;
         }
         
-        public async Task<List<MerchPackInStatus>> V1GetAll(CancellationToken token)
+        public async Task<GetMerchPackDetailsResponse> V1GetMerchPackDetails(string name, CancellationToken token)
         {
-            using var response = await _httpClient.GetAsync("v1/api/merch", token);
+            var normalizedUrl =  Uri.EscapeUriString($"/v1/api/merch/GetMerchPackContent?merchPackName={name}");
+            using var response = await _httpClient.GetAsync(normalizedUrl, token);
             var body = await response.Content.ReadAsStringAsync(token);
-            return JsonSerializer.Deserialize<List<MerchPackInStatus>>(body);
+            return JsonSerializer.Deserialize<GetMerchPackDetailsResponse>(body);
         }
+        
+        public async Task<GetMerchPackIssuedToEmployeeResponse> V1GetMerchIssuedToEmployee(long employeeId, CancellationToken token)
+        {
+            using var response = await _httpClient.GetAsync($"/v1/api/merch/GetMerchIssuedToEmployee?employeeId={employeeId}", token);
+            var body = await response.Content.ReadAsStringAsync(token);
+            return JsonSerializer.Deserialize<GetMerchPackIssuedToEmployeeResponse>(body);
+        }
+        
+        // public async Task<GetMerchPackIssuedToEmployeeResponse> V1GetMerchIssuedToEmployee(long employeeId, CancellationToken token)
+        // {
+        //     using var response = await _httpClient.GetAsync($"v1/api/GetMerchIssuedToEmployee?employeeId={employeeId}", token);
+        //     var body = await response.Content.ReadAsStringAsync(token);
+        //     return JsonSerializer.Deserialize<GetMerchPackIssuedToEmployeeResponse>(body);
+        // }
     }
 }
