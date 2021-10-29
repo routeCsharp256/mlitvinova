@@ -9,7 +9,7 @@ service MerchandiseApiGrpc {
   rpc GetEmployeeIssuedMerchStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
 
   rpc IssueMerchToEmployee (IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
-  
+
   rpc GetMerchPackContent (GetMerchPackContentRequest) returns (GetMerchPackContentResponse);
 }
 
@@ -55,6 +55,7 @@ message Property {
 }
 
 enum MerchPackStatus {
-  ISSUED = 0;
-  ISSUING = 1;
+  MERCH_PACK_STATUS_UNDEFINED = 0;
+  MERCH_PACK_STATUS_ISSUED = 1;
+  MERCH_PACK_STATUS_ISSUING = 2;
 }

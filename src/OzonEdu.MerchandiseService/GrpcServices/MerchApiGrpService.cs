@@ -28,8 +28,7 @@ namespace OzonEdu.MerchandiseService.GrpcServices
                 request.MerchPackName,
                 context.CancellationToken);
 
-            if (result == MerchIssueRequestStatus.NoSuchMerchExists ||
-                result == MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch)
+            if (result != MerchIssueRequestStatus.RequestCreated)
             {
                 throw new RpcException(
                     new Status(StatusCode.InvalidArgument, $"Request initiation failed: {result}"),

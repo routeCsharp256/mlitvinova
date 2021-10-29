@@ -2,24 +2,32 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using OzonEdu.MerchandiseService;
 using OzonEdu.MerchandiseService.HttpClient;
 using OzonEdu.MerchandiseService.HttpModels;
+using OzonEdu.MerchandiseService.Infrastructure.Filters;
 
 namespace TestHttpClient
 {
     public class Tests
     {
+        private TestServer _server;
         private MerchandiseHttpClient _client;
         
         [SetUp]
         public void Setup()
         {
-            var httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri("https://localhost:5001")
-            };
-            _client = new MerchandiseHttpClient(httpClient);
+            _server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>()
+                .ConfigureServices(services =>
+                {
+                    services.AddControllers();
+                }));
+            _client = new MerchandiseHttpClient(_server.CreateClient());
         }
 
         [Test]
@@ -56,9 +64,9 @@ namespace TestHttpClient
             
             var noSuchMerch = await _client.V1IssueMerchToEmployee(1, "Wrong merch", CancellationToken.None);
             Assert.AreEqual(IssueMerchResponse.NoSuchMerch, noSuchMerch.IssueMerchResponse);
-
-            var employeeMerchPacks = await _client.V1GetMerchIssuedToEmployee(2, CancellationToken.None);
-            Assert.AreEqual(1, employeeMerchPacks.MerchList.Count);
+            
+            var validMerchIssue = await _client.V1IssueMerchToEmployee(2, "Starter pack", CancellationToken.None);
+            Assert.AreEqual(IssueMerchResponse.Created, validMerchIssue.IssueMerchResponse);
         }
     }
 }
