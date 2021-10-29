@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseService.Domain.Models;
+using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
-using OzonEdu.MerchandiseService.Models;
-using OzonEdu.MerchandiseService.Services.Interfaces;
-using MerchItem = OzonEdu.MerchandiseService.Models.MerchItem;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
