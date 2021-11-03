@@ -10,7 +10,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commands" />
+      <Folder Include="Handlers\MerchRequestAggregate" />
+      <Folder Include="Stubs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OzonEdu.MerchandiseService.Domain\OzonEdu.MerchandiseService.Domain.csproj" />
     </ItemGroup>
 
 </Project>
