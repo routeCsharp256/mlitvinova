@@ -2,7 +2,7 @@
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate
 {
-    public interface IMerchPackRequestRepository : IRepository<MerchPackRequest>
+    public interface IMerchPackRequestRepository : IRepository<MerchPackRequestHistoryEntry>
     {
         
     }
