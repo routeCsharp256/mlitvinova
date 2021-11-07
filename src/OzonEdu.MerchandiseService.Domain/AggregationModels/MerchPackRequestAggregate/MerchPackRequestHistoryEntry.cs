@@ -26,15 +26,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAg
             Employee employee,
             MerchPackName name,
             List<Sku> skuList,
-            DateTime timeOfCompletion,
-            MerchPackRequestId id)
+            DateTime timeOfCompletion)
         {
             Employee = employee;
             Status = MerchPackRequestHistoryEntryStatus.WaitingForEmployeeToTakeIt;
             MerchPackName = name;
             SkuList = skuList;
             CompletedAt = timeOfCompletion;
-            Id = id;
         }
 
         public void SetRequestToCompleted()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
@@ -13,13 +14,16 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMerchPackRepository _merchPackRepository;
+        private readonly MerchRequestFulfiller _merchRequestFulfiller;
         
         public MerchRequestDomainService(
             IEmployeeRepository employeeRepository,
-            IMerchPackRepository merchPackRepository)
+            IMerchPackRepository merchPackRepository,
+            MerchRequestFulfiller merchRequestFulfiller)
         {
             _employeeRepository = employeeRepository;
             _merchPackRepository = merchPackRepository;
+            _merchRequestFulfiller = merchRequestFulfiller;
         }
         
         public async Task GiveOutMerch(long employeeId, string merchPackName, Dictionary<string, string> constraints, CancellationToken token)
@@ -40,13 +44,13 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
                 throw new MerchAlreadyIssuedException($"Merch {merchPackName} already issued to employee {employeeId}");
             }
 
-            var constraintEntities = new List<IMerchConstraint>();
-            foreach (var constraint in constraints)
-            {
-                constraintEntities.Add(ConstraintConstructor.ConstructConstraint(constraint.Key, constraint.Value));
-            }
+            var constraintEntities = constraints
+                .Select(constraint => 
+                    ConstraintConstructor.ConstructConstraint(constraint.Key, constraint.Value))
+                .ToList();
 
             var merchRequest = new MerchPackRequest(employee, merchPack, constraintEntities);
+            await _merchRequestFulfiller.GiveOutMerchPack(merchRequest, token);
         }
     }
 }

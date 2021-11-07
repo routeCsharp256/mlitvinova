@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggreg
 using OzonEdu.MerchandiseService.Domain.Models;
 using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
@@ -53,6 +55,20 @@ namespace OzonEdu.MerchandiseService.Controllers
             };
             
             return Ok(convertedMerchIssued);
+        }
+        
+        [HttpGet("GetMerchIssuedToEmployeeV2")]
+        public async Task<ActionResult<List<(MerchPackName, MerchPackRequestStatus)>>> GetMerchIssuedToEmployeeV2(
+            long employeeId, CancellationToken token)
+        {
+            var query = new GetMerchRequestsByEmployeeQueue()
+            {
+                EmployeeId = employeeId
+            };
+            
+            var result = await _mediator.Send(query, token);
+            
+            return result;
         }
         
         [HttpPost("IssueMerchToEmployee")]

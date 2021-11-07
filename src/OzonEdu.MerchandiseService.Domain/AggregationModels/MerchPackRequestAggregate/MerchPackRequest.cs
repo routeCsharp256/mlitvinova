@@ -24,31 +24,75 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAg
             PackConstraints = constraints;
         }
 
-        // todo: move
         public List<Sku> FilterByConstraints(List<StockItem> allItems)
         {
-            var packItems = MerchPack.MerchPackItems;
+            CheckAbilityToFormPackIfThereIsClothes();
 
             var skuList = new List<Sku>();
-            
-            foreach (var packItem in packItems)
+            foreach (var packItem in MerchPack.MerchPackItems)
             {
-                var packItemConstraints = packItem.Constraints;
-
-                var itemsByType = allItems.Where(x => x.ItemType.Type.Equals(packItem.ItemType));
-
-                var item = itemsByType.FirstOrDefault();
-                
-                // todo: filter by constraints
-                if (item is null)
-                {
-                    throw new UnableToFormMerchRequestException($"Unable to find sku for {packItem.ItemType}");
-                }
-                
-                skuList.Add(item.Sku);
+                var sku = GetSkuByConstraint(packItem, allItems);
+                skuList.Add(sku);
             }
 
             return skuList;
+        }
+
+        private Sku GetSkuByConstraint(MerchItem item, List<StockItem> allItems)
+        {
+            var itemsByType = allItems.Where(x => x.ItemType.Type.Equals(item.ItemType)).ToList();
+            if (!itemsByType.Any())
+            {
+                throw new UnableToFormMerchRequestException($"No packs of type {item.ItemType}");
+            }
+
+            var validItems = itemsByType
+                .Where(x => ItemSatisfiesConstraint(x, PackConstraints, item.Constraints))
+                .ToList();
+
+            if (!validItems.Any())
+            {
+                throw new UnableToFormMerchRequestException($"Unable to form pack, conflicting constraints {item.ItemType}");
+            }
+
+            return validItems.FirstOrDefault(x => x.Quantity.Value > 0)?.Sku ??
+                   validItems.First().Sku;
+        }
+
+        private bool ItemSatisfiesConstraint(
+            StockItem item, 
+            List<IMerchConstraint> packConstraints,
+            List<GenericMerchConstraint> itemConstraints)
+        {
+            foreach (var itemConstraint in itemConstraints)
+            {
+                if (!itemConstraint.SatisfiesConstraint(item))
+                {
+                    return false;
+                }
+            }
+
+            foreach (var merchPackConstraint in packConstraints)
+            {
+                if (!merchPackConstraint.SatisfiesConstraint(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
+        private void CheckAbilityToFormPackIfThereIsClothes()
+        {
+            if (MerchPack.MerchPackItems.Any(x => x.ItemType.IsClothes))
+            {
+                if (PackConstraints.All(x => (ClothingSizeMerchConstraint) x == null))
+                {
+                    throw new UnableToFormMerchRequestException(
+                        $"Need to have clothing size constraint for merch pack {MerchPack.Name.Value}");
+                }
+            }
         }
     }
 }
