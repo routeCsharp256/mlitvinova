@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
@@ -15,10 +19,12 @@ namespace OzonEdu.MerchandiseService.Controllers
     public class MerchController : ControllerBase
     {
         private readonly IMerchandiseService _merchandiseService;
+        private readonly IMediator _mediator;
 
-        public MerchController(IMerchandiseService service)
+        public MerchController(IMerchandiseService service, IMediator mediator)
         {
             _merchandiseService = service;
+            _mediator = mediator;
         }
 
         [HttpGet("GetMerchIssuedToEmployee")]
@@ -50,7 +56,10 @@ namespace OzonEdu.MerchandiseService.Controllers
         }
         
         [HttpPost("IssueMerchToEmployee")]
-        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployee(long employeeId, string merchPackName, CancellationToken token)
+        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployee(
+            long employeeId,
+            string merchPackName, 
+            CancellationToken token)
         {
             var status = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
             var requestStatus = status switch
@@ -60,12 +69,12 @@ namespace OzonEdu.MerchandiseService.Controllers
                 MerchIssueRequestStatus.RequestCreated => IssueMerchResponse.Created,
                 _ => IssueMerchResponse.Unknown
             };
-
+            
             var result = new IssueMerchToEmployeeResponse()
             {
                 IssueMerchResponse = requestStatus
             };
-
+            
             return Ok(result);
         }
 

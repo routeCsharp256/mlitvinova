@@ -6,12 +6,10 @@ namespace OzonEdu.MerchandiseService.Domain.Exceptions
     {
         public MerchRequestHistoryEntryStatusException(string message) : base(message)
         {
-            
         }
         
         public MerchRequestHistoryEntryStatusException(string message, Exception innerException) : base(message, innerException)
         {
-            
         }
     }
 }

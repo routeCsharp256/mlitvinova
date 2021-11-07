@@ -5,23 +5,17 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
     public class ClothingSizeMerchConstraint : IMerchConstraint
     {
+        public ClothingSize Size { get; }
+        
         public ClothingSizeMerchConstraint(ClothingSize size)
         {
             Size = size;
         }
-        
-        public ClothingSize Size { get; }
-        
-        public bool SatisfiesConstraint(StockItem sku)
+
+        public bool SatisfiesConstraint(StockItem stockItem)
         {
-            if (!sku.ItemType.Type.IsClothes)
-            {
-                return false;
-            }
-            else
-            {
-                return sku.ClothingSize.Equals(Size);
-            }
+            bool isAppliable = stockItem.ItemType.Type.IsClothes;
+            return !isAppliable || stockItem.ClothingSize.Equals(Size);
         }
     }
 }

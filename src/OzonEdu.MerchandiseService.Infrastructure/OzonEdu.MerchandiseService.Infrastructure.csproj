@@ -10,7 +10,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Handlers\MerchRequestAggregate" />
       <Folder Include="Stubs" />
     </ItemGroup>
 

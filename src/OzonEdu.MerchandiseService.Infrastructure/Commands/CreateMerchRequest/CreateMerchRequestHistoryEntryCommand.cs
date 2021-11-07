@@ -3,12 +3,12 @@ using MediatR;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest
 {
-    public class CreateMerchRequestCommand : IRequest
+    public class CreateMerchRequestHistoryEntryCommand : IRequest
     {
         public long EmployeeId { get; init; }
         
         public string MerchPackName { get; init; }
         
-        public Dictionary<string, string> Restrainments { get; init; }
+        public List<long> Sku { get; init; }
     }
 }

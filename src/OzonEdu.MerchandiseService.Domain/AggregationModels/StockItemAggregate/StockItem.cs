@@ -5,7 +5,7 @@ using OzonEdu.MerchandiseService.Domain.BaseTypes;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate
 {
-    public class StockItem : Entity
+    public class StockItem : Entity, IAggregationRoot
     {
         public StockItem(Sku sku,
             Name name,
@@ -32,7 +32,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate
 
         public Tag Tag { get; set; }
 
-        public void SetClothingSize(ClothingSize size)
+        private void SetClothingSize(ClothingSize size)
         {
             if (size is not null && ItemType.Type.IsClothes)
             {

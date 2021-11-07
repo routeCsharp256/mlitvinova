@@ -13,8 +13,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
         public string PropertyName { get; }
         public string PropertyValue { get; }
         
-        public bool SatisfiesConstraint(StockItem sku)
+        public bool SatisfiesConstraint(StockItem stockItem)
         {
+            var genericProperties = stockItem.Tag;
             // possibly somehow validate stock item tag I don't really understand that 
             return true;
         }

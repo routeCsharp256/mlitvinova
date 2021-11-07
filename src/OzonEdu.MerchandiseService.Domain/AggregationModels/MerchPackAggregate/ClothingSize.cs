@@ -1,4 +1,6 @@
-﻿using OzonEdu.MerchandiseService.Domain.BaseTypes;
+﻿using System.Linq;
+using OzonEdu.MerchandiseService.Domain.BaseTypes;
+using OzonEdu.MerchandiseService.Domain.Exceptions;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {
@@ -14,5 +16,22 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
         public ClothingSize(int id, string name) : base(id, name)
         {
         }
+        
+        public static ClothingSize Parse(string value)
+        {
+            if (!IsClothingSize(value))
+            {
+                throw new InvalidConstraintType($"Wrong clothing size {value}");
+            }
+
+            return GetAll<ClothingSize>().First(x => x.Name.Equals(value));
+        }
+        
+        private static bool IsClothingSize(string value)
+        {
+            var allAvailableSizes = GetAll<ClothingSize>();
+            return allAvailableSizes.Any(x => x.Name.Equals(value));
+        }
+
     }
 }

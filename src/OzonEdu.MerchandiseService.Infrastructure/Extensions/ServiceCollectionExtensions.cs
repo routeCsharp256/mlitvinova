@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 {
@@ -7,7 +8,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-           // services.AddMediatR(typeof(CreateStockItemCommandHandler).Assembly);
+            services.AddMediatR(typeof(CreateMerchRequestHistoryEntryCommandHandler).Assembly);
             
             return services;
         }
