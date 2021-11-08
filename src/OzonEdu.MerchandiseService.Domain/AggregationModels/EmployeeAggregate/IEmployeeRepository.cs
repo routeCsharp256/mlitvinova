@@ -8,7 +8,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate
 {
     public interface IEmployeeRepository
     {
-        public Task<List<(MerchPackName, MerchPackRequestStatus)>> GetMerchIssuedToEmployee(Employee employee,
+        public Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(Employee employee,
             CancellationToken token = default);
 
         public Task<bool> IsMerchAlreadyReceived(Employee employee, MerchPackName name, CancellationToken token = default);

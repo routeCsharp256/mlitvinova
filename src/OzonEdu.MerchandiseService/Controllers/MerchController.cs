@@ -11,6 +11,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggreg
 using OzonEdu.MerchandiseService.Domain.Models;
 using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
+using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers
@@ -23,10 +24,13 @@ namespace OzonEdu.MerchandiseService.Controllers
         private readonly IMerchandiseService _merchandiseService;
         private readonly IMediator _mediator;
 
-        public MerchController(IMerchandiseService service, IMediator mediator)
+        private readonly MerchRequestDomainService _merchRequestDomainService;
+
+        public MerchController(IMerchandiseService service, IMediator mediator, MerchRequestDomainService merchRequestDomainService)
         {
             _merchandiseService = service;
             _mediator = mediator;
+            _merchRequestDomainService = merchRequestDomainService;
         }
 
         [HttpGet("GetMerchIssuedToEmployee")]
@@ -58,7 +62,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         }
         
         [HttpGet("GetMerchIssuedToEmployeeV2")]
-        public async Task<ActionResult<List<(MerchPackName, MerchPackRequestStatus)>>> GetMerchIssuedToEmployeeV2(
+        public async Task<ActionResult<List<MerchIssuedToEmployee>>> GetMerchIssuedToEmployeeV2(
             long employeeId, CancellationToken token)
         {
             var query = new GetMerchRequestsByEmployeeQueue()
@@ -92,6 +96,18 @@ namespace OzonEdu.MerchandiseService.Controllers
             };
             
             return Ok(result);
+        }
+        
+        [HttpPost("IssueMerchToEmployeeV2")]
+        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployeeV2(
+            long employeeId,
+            string merchPackName, 
+            Dictionary<string, string> constraints,
+            CancellationToken token)
+        {
+            await _merchRequestDomainService.GiveOutMerch(employeeId, merchPackName, constraints, token);
+
+            return Ok();
         }
 
         [HttpGet("GetMerchPackContent")]

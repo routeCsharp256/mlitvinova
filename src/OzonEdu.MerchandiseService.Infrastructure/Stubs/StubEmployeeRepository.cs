@@ -17,11 +17,13 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
             _stubData = data;
         }
         
-        public Task<List<(MerchPackName, MerchPackRequestStatus)>> GetMerchIssuedToEmployee(
+        public Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(
             Employee employee, 
             CancellationToken token = default)
         {
-            var result = _stubData.MerchIssued[employee.Id];
+            var result = _stubData.MerchIssued[employee.Id]
+                .Select(x => new MerchIssuedToEmployee(x.Item1, x.Item2))
+                .ToList();
             return Task.FromResult(result);
         }
 

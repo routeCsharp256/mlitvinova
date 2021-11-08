@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.Models;
 using MerchItem = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate.MerchItem;
@@ -43,6 +44,28 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
                     (StarterPack.Name, MerchPackRequestStatus.WaitingForSupplies)
                 }
             }
+        };
+
+        public readonly List<StockItem> AllItems = new()
+        {
+            new StockItem(
+                new Sku(1),
+                new Name("Pen"),
+                new Item(ItemType.Pen),
+                null,
+                new Quantity(15))
+            {
+                Tag = new Tag("Color:red")
+            },
+            new StockItem(
+                new Sku(2),
+                new Name("Notepad"),
+                new Item(ItemType.Notepad),
+                null,
+                new Quantity(15))
+            {
+                Tag = new Tag("Color:red,print:hello")
+            },
         };
     }
 }

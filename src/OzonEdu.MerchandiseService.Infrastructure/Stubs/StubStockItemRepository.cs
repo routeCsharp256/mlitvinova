@@ -8,14 +8,21 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 {
     public class StubStockItemRepository : IStockItemRepository
     {
+        private readonly StubData _stubData;
+
+        public StubStockItemRepository(StubData data)
+        {
+            _stubData = data;
+        }
+        
         public Task<List<StockItem>> GetAllStockItems(CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(_stubData.AllItems);
         }
 
         public Task<bool> GiveOutSkus(List<Sku> skus, CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(true);
         }
     }
 }

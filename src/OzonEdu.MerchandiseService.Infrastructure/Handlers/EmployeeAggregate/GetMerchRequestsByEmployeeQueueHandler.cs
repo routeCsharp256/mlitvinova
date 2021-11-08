@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate
 {
     public class GetMerchRequestsByEmployeeQueueHandler 
-        : IRequestHandler<GetMerchRequestsByEmployeeQueue, List<(MerchPackName, MerchPackRequestStatus)>>
+        : IRequestHandler<GetMerchRequestsByEmployeeQueue, List<MerchIssuedToEmployee>>
     {
         private readonly IEmployeeRepository _employeeRepository;
 
@@ -21,7 +19,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate
             _employeeRepository = employeeRepository;
         }
         
-        public async Task<List<(MerchPackName, MerchPackRequestStatus)>> Handle(
+        public async Task<List<MerchIssuedToEmployee>> Handle(
             GetMerchRequestsByEmployeeQueue request, CancellationToken cancellationToken)
         {
             var requests = await _employeeRepository.GetMerchIssuedToEmployee(
