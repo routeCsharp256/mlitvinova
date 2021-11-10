@@ -1,0 +1,61 @@
+﻿syntax = "proto3";
+option csharp_namespace = "OzonEdu.StockApi.Grpc";
+package StockApi;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+service MerchandiseApiGrpc {
+  rpc GetEmployeeIssuedMerchStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
+
+  rpc IssueMerchToEmployee (IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
+
+  rpc GetMerchPackContent (GetMerchPackContentRequest) returns (GetMerchPackContentResponse);
+}
+
+message GetMerchIssuedToEmployeeRequest {
+  int64 employee_id = 1;
+}
+
+message GetMerchIssuedToEmployeeResponse {
+  repeated MerchPackInStatus merch = 1;
+}
+
+message IssueMerchToEmployeeRequest {
+  int64 employee_id = 1;
+  string merch_pack_name = 2;
+}
+
+message GetMerchPackContentRequest {
+  string merch_pack_name = 1;
+}
+
+message GetMerchPackContentResponse {
+  MerchPack merch_pack = 1;
+}
+
+message MerchPackInStatus {
+  string merch_pack_name = 1;
+  MerchPackStatus status = 2;
+}
+
+message MerchPack {
+  string merch_pack_name = 1;
+  repeated MerchItem pack_items = 2;
+}
+
+message MerchItem {
+  string merch_name = 1;
+  repeated Property properties = 2;
+}
+
+message Property {
+  string property_name = 1;
+  string property_value = 2;
+}
+
+enum MerchPackStatus {
+  MERCH_PACK_STATUS_UNDEFINED = 0;
+  MERCH_PACK_STATUS_ISSUED = 1;
+  MERCH_PACK_STATUS_ISSUING = 2;
+}
