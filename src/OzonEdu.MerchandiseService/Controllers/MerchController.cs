@@ -12,6 +12,7 @@ using OzonEdu.MerchandiseService.Domain.Models;
 using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
+using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers
@@ -22,14 +23,12 @@ namespace OzonEdu.MerchandiseService.Controllers
     public class MerchController : ControllerBase
     {
         private readonly IMerchandiseService _merchandiseService;
-        private readonly IMediator _mediator;
 
-        private readonly MerchRequestDomainService _merchRequestDomainService;
+        private readonly IMerchRequestDomainService _merchRequestDomainService;
 
-        public MerchController(IMerchandiseService service, IMediator mediator, MerchRequestDomainService merchRequestDomainService)
+        public MerchController(IMerchandiseService service, IMediator mediator, IMerchRequestDomainService merchRequestDomainService)
         {
             _merchandiseService = service;
-            _mediator = mediator;
             _merchRequestDomainService = merchRequestDomainService;
         }
 
@@ -65,13 +64,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         public async Task<ActionResult<List<MerchIssuedToEmployee>>> GetMerchIssuedToEmployeeV2(
             long employeeId, CancellationToken token)
         {
-            var query = new GetMerchRequestsByEmployeeQueue()
-            {
-                EmployeeId = employeeId
-            };
-            
-            var result = await _mediator.Send(query, token);
-            
+            var result = await _merchRequestDomainService.GetMerchIssuedToEmployee(employeeId, token);
             return result;
         }
         

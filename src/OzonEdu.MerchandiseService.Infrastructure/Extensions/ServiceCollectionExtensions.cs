@@ -3,8 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
+using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Stubs;
 
@@ -17,7 +19,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
             services.AddMediatR(typeof(CreateMerchRequestHistoryEntryCommandHandler).Assembly);
 
             services.AddSingleton<MerchRequestFulfiller>();
-            services.AddSingleton<MerchRequestDomainService>();
+            services.AddSingleton<IMerchRequestDomainService, MerchRequestDomainService>();
             
             return services;
         }
@@ -27,7 +29,8 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
             services.AddSingleton<IStockItemRepository, StubStockItemRepository>();
             services.AddSingleton<IMerchPackRepository, StubMerchPackRepository>();
             services.AddSingleton<IMerchPackRequestRepository, StubMerchRequestRepository>();
-
+            services.AddSingleton<IMerchPackRequestHistoryEntryRepository, StubMerchPackRequestHistoryEntryRepository>();
+            
             services.AddSingleton<StubData>();
             
             return services;
