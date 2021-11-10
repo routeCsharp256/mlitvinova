@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,15 +16,21 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
     {
         private readonly IStockItemRepository _stockItemRepository;
         private readonly IMediator _mediator;
+
+        private readonly MerchPackRequestFactory _factory;
         
-        public MerchRequestFulfiller(IStockItemRepository repository, IMediator mediator)
+        public MerchRequestFulfiller(IStockItemRepository repository, IMediator mediator, MerchPackRequestFactory factory)
         {
             _stockItemRepository = repository;
             _mediator = mediator;
+            _factory = factory;
         }
 
-        public async Task GiveOutMerchPack(MerchPackRequest request, CancellationToken token)
+        public async Task GiveOutMerchPack(
+            int employeeId, string merchPackName, Dictionary<string, string> constraints, CancellationToken token)
         {
+            var request = await _factory.BuildRequest(employeeId, merchPackName, constraints, token);
+            
             var allStockItems = await _stockItemRepository.GetAllStockItems(token);
 
             var skuList = request.FilterByConstraints(allStockItems);
@@ -34,7 +41,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
             {
                 await _mediator.Send(new CreateMerchRequestEntryCommand()
                     {
-                        Request = request
+                        MerchPackRequest = request
                     },
                     token);
                 // call for helb

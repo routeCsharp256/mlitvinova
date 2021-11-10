@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
@@ -10,19 +11,28 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
     public class StubMerchPackRequestHistoryEntryRepository : IMerchPackRequestHistoryEntryRepository
     {
         public IUnitOfWork UnitOfWork { get; }
+        
+        private readonly StubData _stubData;
+        public StubMerchPackRequestHistoryEntryRepository(StubData data)
+        {
+            _stubData = data;
+        }
+        
         public Task<MerchPackRequestHistoryEntry> CreateAsync(MerchPackRequestHistoryEntry itemToCreate, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            _stubData.MerchIssued.Add(itemToCreate);
+            return Task.FromResult(itemToCreate);
         }
 
         public Task<MerchPackRequestHistoryEntry> UpdateAsync(MerchPackRequestHistoryEntry itemToUpdate, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            var toUpdate = _stubData.MerchIssued.Select(x => x.Id == itemToUpdate.Id);
+            return Task.FromResult(itemToUpdate);
         }
 
         public Task<List<MerchPackRequestHistoryEntry>> FindByEmployeeAsync(Employee employee, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(_stubData.MerchIssued.FindAll(x => x.Employee.Equals(employee)));
         }
     }
 }

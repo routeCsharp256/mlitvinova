@@ -19,6 +19,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
             services.AddMediatR(typeof(CreateMerchRequestHistoryEntryCommandHandler).Assembly);
 
             services.AddSingleton<MerchRequestFulfiller>();
+            services.AddSingleton<MerchPackRequestFactory>();
             services.AddSingleton<IMerchRequestDomainService, MerchRequestDomainService>();
             
             return services;

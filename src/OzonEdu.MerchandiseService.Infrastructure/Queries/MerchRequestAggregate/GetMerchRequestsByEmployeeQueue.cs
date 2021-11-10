@@ -6,6 +6,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregat
 {
     public class GetMerchRequestsByEmployeeQueue: IRequest<List<MerchIssuedToEmployee>>
     {
-        public long EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

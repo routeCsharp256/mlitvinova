@@ -10,6 +10,7 @@ using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Exceptions;
 using OzonEdu.MerchandiseService.Infrastructure.Extensions;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
+using ConstraintConstructor = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate.ConstraintConstructor;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
 {
@@ -29,7 +30,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
             _mediator = mediator;
         }
 
-        public async Task GiveOutMerch(long employeeId, string merchPackName, Dictionary<string, string> constraints,
+        public async Task GiveOutMerch(int employeeId, string merchPackName, Dictionary<string, string> constraints,
             CancellationToken token)
         {
             var name = new MerchPackName(merchPackName);
@@ -56,16 +57,10 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
                 throw new MerchAlreadyIssuedException($"Merch {merchPackName} already issued to employee {employeeId}");
             }
 
-            var constraintEntities = constraints
-                .Select(constraint =>
-                    ConstraintConstructor.ConstructConstraint(constraint.Key, constraint.Value))
-                .ToList();
-
-            var merchRequest = new MerchPackRequest(employee, merchPack, constraintEntities);
-            await _merchRequestFulfiller.GiveOutMerchPack(merchRequest, token);
+            await _merchRequestFulfiller.GiveOutMerchPack(employeeId, merchPackName, constraints, token);
         }
 
-        public async Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(long employeeId,
+        public async Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(int employeeId,
             CancellationToken token)
         {
             var alreadyReceivedMerch = await _mediator.Send(

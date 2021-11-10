@@ -6,6 +6,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest
 {
     public class CreateMerchRequestEntryCommand : IRequest
     {
-        public MerchPackRequest Request { get; init; }
+        public MerchPackRequest MerchPackRequest { get; init; }
     }
 }

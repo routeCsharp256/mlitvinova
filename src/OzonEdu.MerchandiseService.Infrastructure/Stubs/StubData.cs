@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.Models;
@@ -15,37 +18,58 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
             new MerchPackName("Starter pack"), 
             new List<MerchItem>()
             {
-                new MerchItem(ItemType.Notepad, new List<GenericMerchConstraint>()
-                {
-                    new GenericMerchConstraint("Color", "Red")
-                })
+                new MerchItem(ItemType.Notepad, new List<GenericMerchConstraint>())
             });
 
         public static readonly MerchPack WelcomePack = new MerchPack(
             new MerchPackName("Welcome pack"), new List<MerchItem>()
             {
-                new MerchItem(ItemType.Pen, new List<GenericMerchConstraint>()
-                {
-                    new GenericMerchConstraint("Цвет", "Синий")
-                })
+                new MerchItem(ItemType.Pen, new List<GenericMerchConstraint>())
             });
 
+        public static readonly MerchPack GoodbyePack = new MerchPack(
+            new MerchPackName("Goodbye pack"), new List<MerchItem>()
+            {
+                new MerchItem(ItemType.Socks, new List<GenericMerchConstraint>())
+            });
+        
         public static readonly List<MerchPack> AvailablePacks = new List<MerchPack>
         {
             StarterPack,
-            WelcomePack
-        };
-        
-        public readonly Dictionary<long, List<(MerchPackName, MerchPackRequestStatus)>> MerchIssued = new()
-        {
-            {
-                1, new List<(MerchPackName, MerchPackRequestStatus)>()
-                {
-                    (StarterPack.Name, MerchPackRequestStatus.WaitingForSupplies)
-                }
-            }
+            WelcomePack,
+            GoodbyePack
         };
 
+        public readonly List<MerchPackRequest> MerchIssuing = new()
+        {
+            new MerchPackRequest(
+                new Employee(1),
+                StarterPack,
+                new List<IMerchConstraint>()
+                {
+                    new GenericMerchConstraint("Color", "red")
+                }),
+            new MerchPackRequest(
+                new Employee(2),
+                WelcomePack,
+                new List<IMerchConstraint>()
+                {
+                    new GenericMerchConstraint("Color", "red")
+                })
+        };
+        
+        public readonly List<MerchPackRequestHistoryEntry> MerchIssued = new()
+        {
+            new MerchPackRequestHistoryEntry(
+                new Employee(1),
+                WelcomePack.Name,
+                new List<Sku>
+                {
+                    new Sku(1)
+                },
+                DateTime.MinValue)
+        };
+        
         public readonly List<StockItem> AllItems = new()
         {
             new StockItem(

@@ -1,7 +1,6 @@
 ﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Exceptions;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate
 {
     public static class ConstraintConstructor
     {

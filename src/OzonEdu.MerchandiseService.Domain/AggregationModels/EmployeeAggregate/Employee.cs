@@ -2,11 +2,9 @@
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate
 {
-    public class Employee : Entity
+    public sealed class Employee : Entity
     {
-        public long Id { get; }
-        
-        public Employee(long employeeId)
+        public Employee(int employeeId)
         {
             Id = employeeId;
         }

@@ -11,15 +11,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHi
 {
     public class MerchPackRequestHistoryEntry : Entity
     {
-        public MerchPackRequestId Id { get; }
-        
         public Employee Employee { get; }
         
         public MerchPackName MerchPackName { get; }
         
         public List<Sku> SkuList { get; }
         
-        public DateTime CompletedAt { get; private set; }
+        public DateTime CompletedAt { get; }
         
         public MerchPackRequestHistoryEntryStatus Status { get; private set; }
 

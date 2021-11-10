@@ -33,71 +33,15 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
             throw new System.NotImplementedException();
         }
 
-        public Task<MerchPackRequestHistoryEntry> CreateAsync(
-            MerchPackRequestHistoryEntry itemToCreate,
-            CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<MerchPackRequestHistoryEntry> UpdateAsync(MerchPackRequestHistoryEntry itemToUpdate,
-            CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<List<MerchPackRequest>> FindAllAsync(CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(_stubData.MerchIssuing);
         }
 
         public Task<List<MerchPackRequest>> FindByEmployeeAsync(Employee employee,
             CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<MerchPackRequestHistoryEntry>> FindByIdAsync(long id,
-            CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<MerchPackRequest>> GetAllUnfulfilledRequests(CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task AddSuccessfullyOrderedRequest(MerchPackRequestHistoryEntry historyEntry,
-            CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task AddWaitingForCompletionRequest(MerchPackRequest request, CancellationToken token = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(
-            Employee employee,
-            CancellationToken token = default)
-        {
-            var result = _stubData.MerchIssued[employee.Id]
-                .Select(x => new MerchIssuedToEmployee(x.Item1, x.Item2))
-                .ToList();
-            return Task.FromResult(result);
-        }
-
-        public Task<bool> IsMerchAlreadyReceived(
-            Employee employee,
-            MerchPackName name,
-            CancellationToken token = default)
-        {
-            var merchIssued = _stubData.MerchIssued.ContainsKey(employee.Id)
-                              && _stubData.MerchIssued[employee.Id].Any(x => x.Item1.Equals(name));
-
-            return Task.FromResult(merchIssued);
+            return Task.FromResult(_stubData.MerchIssuing.FindAll(x => x.EmployeeId.Equals(employee)));
         }
     }
 }

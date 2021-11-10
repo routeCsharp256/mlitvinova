@@ -62,7 +62,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         
         [HttpGet("GetMerchIssuedToEmployeeV2")]
         public async Task<ActionResult<List<MerchIssuedToEmployee>>> GetMerchIssuedToEmployeeV2(
-            long employeeId, CancellationToken token)
+            int employeeId, CancellationToken token)
         {
             var result = await _merchRequestDomainService.GetMerchIssuedToEmployee(employeeId, token);
             return result;
@@ -93,7 +93,7 @@ namespace OzonEdu.MerchandiseService.Controllers
         
         [HttpPost("IssueMerchToEmployeeV2")]
         public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployeeV2(
-            long employeeId,
+            int employeeId,
             string merchPackName, 
             Dictionary<string, string> constraints,
             CancellationToken token)
