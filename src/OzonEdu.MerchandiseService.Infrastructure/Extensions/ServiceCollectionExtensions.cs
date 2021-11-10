@@ -25,7 +25,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureRepositories(this IServiceCollection services)
         {
             services.AddSingleton<IStockItemRepository, StubStockItemRepository>();
-            services.AddSingleton<IEmployeeRepository, StubEmployeeRepository>();
             services.AddSingleton<IMerchPackRepository, StubMerchPackRepository>();
             services.AddSingleton<IMerchPackRequestRepository, StubMerchRequestRepository>();
 

@@ -2,20 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate
 {
-    public interface IMerchPackRequestRepository : IRepository<MerchPackRequestHistoryEntry>
+    public interface IMerchPackRequestRepository : IRepository<MerchPackRequest>
     {
-        Task<List<MerchPackRequestHistoryEntry>> FindByEmployeeAsync(Employee employee, CancellationToken cancellationToken = default);
+        Task<List<MerchPackRequest>> FindAllAsync(CancellationToken cancellationToken = default);
 
-        Task<List<MerchPackRequestHistoryEntry>> FindByIdAsync(long id, CancellationToken cancellationToken = default);
-
-        Task<List<MerchPackRequest>> GetAllUnfulfilledRequests(CancellationToken cancellationToken = default);
-
-        Task AddSuccessfullyOrderedRequest(MerchPackRequestHistoryEntry historyEntry, CancellationToken cancellationToken = default);
-
-        Task AddWaitingForCompletionRequest(MerchPackRequest request, CancellationToken token = default);
+        Task<List<MerchPackRequest>> FindByEmployeeAsync(Employee employee, CancellationToken cancellationToken = default);
     }
 }

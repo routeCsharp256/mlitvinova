@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 {
@@ -23,6 +24,17 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
         public Task<bool> GiveOutSkus(List<Sku> skus, CancellationToken token)
         {
             return Task.FromResult(true);
+        }
+
+        public IUnitOfWork UnitOfWork { get; }
+        public Task<StockItem> CreateAsync(StockItem itemToCreate, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<StockItem> UpdateAsync(StockItem itemToUpdate, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

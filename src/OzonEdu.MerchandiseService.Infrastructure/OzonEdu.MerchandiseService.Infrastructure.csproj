@@ -13,4 +13,9 @@
       <ProjectReference Include="..\OzonEdu.MerchandiseService.Domain\OzonEdu.MerchandiseService.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Handlers\MerchRequestHistoryEntryAggregate" />
+      <Folder Include="Handlers\StockItemAggregate" />
+    </ItemGroup>
+
 </Project>

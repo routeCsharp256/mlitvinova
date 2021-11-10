@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.BaseTypes;
 using OzonEdu.MerchandiseService.Domain.Exceptions;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate
 {
     public class MerchPackRequestHistoryEntry : Entity
     {

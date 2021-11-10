@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Domain.Exceptions;
+using OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
 {
     public class MerchRequestFulfiller
     {
         private readonly IStockItemRepository _stockItemRepository;
-        private readonly IMerchPackRequestRepository _merchPackRequestRepository;
+        private readonly IMediator _mediator;
         
-        public MerchRequestFulfiller(IStockItemRepository stockItemRepository, IMerchPackRequestRepository merchPackRequestRepository)
+        public MerchRequestFulfiller(IStockItemRepository repository, IMediator mediator)
         {
-            _stockItemRepository = stockItemRepository;
-            _merchPackRequestRepository = merchPackRequestRepository;
+            _stockItemRepository = repository;
+            _mediator = mediator;
         }
 
         public async Task GiveOutMerchPack(MerchPackRequest request, CancellationToken token)
@@ -28,18 +32,22 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
 
             if (!reservationSuccessful)
             {
-                await _merchPackRequestRepository.AddWaitingForCompletionRequest(request, token);
+                await _mediator.Send(new CreateMerchRequestEntryCommand()
+                    {
+                        Request = request
+                    },
+                    token);
                 // call for helb
             }
             else
             {
-                var successfullyFulfilledRequest = new MerchPackRequestHistoryEntry(
-                    request.EmployeeId,
-                    request.MerchPack.Name,
-                    skuList,
-                    DateTime.Now);
-
-                await _merchPackRequestRepository.AddSuccessfullyOrderedRequest(successfullyFulfilledRequest, token);
+                await _mediator.Send(new CreateMerchRequestHistoryEntryCommand()
+                {
+                    CompletedAt = DateTime.Now,
+                    EmployeeId = request.EmployeeId.Id,
+                    MerchPackName = request.MerchPack.Name.Value,
+                    Sku = skuList.Select(x => x.Value).ToList()
+                });
             }
         }
     }
