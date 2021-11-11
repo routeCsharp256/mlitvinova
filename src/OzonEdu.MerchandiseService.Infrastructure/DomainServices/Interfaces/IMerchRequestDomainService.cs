@@ -15,5 +15,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces
 
         Task GiveOutPreparedPack(int employeeId, string packName, CancellationToken token);
 
+        Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token);
     }
 }

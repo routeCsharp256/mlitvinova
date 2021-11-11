@@ -131,5 +131,11 @@ namespace OzonEdu.MerchandiseService.Controllers
         {
             await _merchRequestDomainService.GiveOutPreparedPack(employeeId, packName, token);
         }
+
+        [HttpPost("ProcessNewSupportArrivalV2")]
+        public async Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token)
+        {
+            await _merchRequestDomainService.ProcessNewSupportArrival(skuArrived, token);
+        }
     }
 }

@@ -19,5 +19,15 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
             // possibly somehow validate stock item tag I don't really understand that 
             return true;
         }
+
+        public string Key()
+        {
+            return PropertyName;
+        }
+
+        public string Value()
+        {
+            return PropertyValue;
+        }
     }
 }

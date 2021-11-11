@@ -68,6 +68,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests.Services
                 merchPackRepo,
                 merchPackFulfiller,
                 _merchPackRequestHistoryEntryRepo,
+                _merchPackRequestRepo,
                 _mediator.Object);
         }
     }

@@ -17,5 +17,15 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
             bool isAppliable = stockItem.ItemType.Type.IsClothes;
             return !isAppliable || stockItem.ClothingSize.Equals(Size);
         }
+
+        public string Key()
+        {
+            return "Clothing size";
+        }
+
+        public string Value()
+        {
+            return Size.ToString();
+        }
     }
 }

@@ -16,21 +16,24 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
     public class MerchRequestDomainService : IMerchRequestDomainService
     {
         private readonly IMerchPackRepository _merchPackRepository;
-        private readonly MerchRequestFulfiller _merchRequestFulfiller;
+        private readonly IMerchPackRequestRepository _merchPackRequestRepository;
         private readonly IMerchPackRequestHistoryEntryRepository _merchPackRequestHistoryEntryRepository;
         
+        private readonly MerchRequestFulfiller _merchRequestFulfiller;
         private readonly IMediator _mediator;
 
         public MerchRequestDomainService(
             IMerchPackRepository merchPackRepository,
             MerchRequestFulfiller merchRequestFulfiller,
             IMerchPackRequestHistoryEntryRepository merchPackRequestHistoryEntryRepository,
+            IMerchPackRequestRepository merchPackRequestRepository,
             IMediator mediator)
         {
             _merchPackRepository = merchPackRepository;
             _merchRequestFulfiller = merchRequestFulfiller;
             _mediator = mediator;
             _merchPackRequestHistoryEntryRepository = merchPackRequestHistoryEntryRepository;
+            _merchPackRequestRepository = merchPackRequestRepository;
         }
 
         public async Task GiveOutMerch(int employeeId, string merchPackName, Dictionary<string, string> constraints,
@@ -86,6 +89,23 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
             }
             
             waitingRequest.SetRequestToCompleted();
+        }
+
+        public async Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token)
+        {
+            var unfulfilledRequests = await _merchPackRequestRepository.FindAllAsync(token);
+            var unmodified = new MerchPackRequest[unfulfilledRequests.Count];
+
+            unfulfilledRequests.CopyTo(unmodified);
+            
+            foreach (var unfulfilledRequest in unmodified)
+            {
+                await _merchRequestFulfiller.GiveOutMerchPack(
+                    unfulfilledRequest.EmployeeId.Id, 
+                    unfulfilledRequest.MerchPack.Name.Value, 
+                    unfulfilledRequest.PackConstraints.ToDictionary(x => x.Key(), x => x.Value()),
+                    token);
+            }
         }
     }
 }
