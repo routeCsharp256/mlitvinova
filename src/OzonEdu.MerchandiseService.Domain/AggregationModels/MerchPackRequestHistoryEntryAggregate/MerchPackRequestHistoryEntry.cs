@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.BaseTypes;
 using OzonEdu.MerchandiseService.Domain.Events;
@@ -49,7 +48,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHi
 
         private void AddMerchPackRequestCompletedEvent()
         {
-            this.AddDomainEvent(new MerchRequestHasBeenCompletedDomainEvent(this));
+            AddDomainEvent(new MerchRequestHasBeenCompletedDomainEvent(this));
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces
 {
@@ -15,6 +16,8 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces
 
         Task GiveOutPreparedPack(int employeeId, string packName, CancellationToken token);
 
-        Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token);
+        Task ProcessNewSupplyArrival(List<long> skuArrived, CancellationToken token);
+
+        Task<MerchPack> GetMerchPackContent(string packName, CancellationToken token);
     }
 }

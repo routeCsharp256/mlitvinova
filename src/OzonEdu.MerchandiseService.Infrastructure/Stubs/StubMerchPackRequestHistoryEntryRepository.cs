@@ -10,9 +10,11 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 {
     public class StubMerchPackRequestHistoryEntryRepository : IMerchPackRequestHistoryEntryRepository
     {
-        public IUnitOfWork UnitOfWork { get; }
+        // TODO: Actual Unit of Work implementation.
+        public IUnitOfWork UnitOfWork { get; } = new StubUnitOfWork();
         
         private readonly StubData _stubData;
+        
         public StubMerchPackRequestHistoryEntryRepository(StubData data)
         {
             _stubData = data;

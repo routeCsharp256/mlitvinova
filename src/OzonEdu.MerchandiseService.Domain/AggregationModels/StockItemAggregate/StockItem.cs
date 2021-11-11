@@ -1,5 +1,4 @@
-﻿using System;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.BaseTypes;
 

@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using Xunit;
 
 namespace OzonEdu.MerchandiseService.Domain.Tests.Services

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest

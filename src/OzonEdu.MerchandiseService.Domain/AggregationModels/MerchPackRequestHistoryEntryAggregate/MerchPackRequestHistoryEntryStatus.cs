@@ -13,12 +13,12 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHi
         // todo: rewrite
         public MerchPackRequestStatus ToMerchPackRequestStatus()
         {
-            if (this.Equals(Completed))
+            if (Equals(Completed))
             {
                 return MerchPackRequestStatus.Completed;
             }
 
-            if (this.Equals(WaitingForEmployeeToTakeIt))
+            if (Equals(WaitingForEmployeeToTakeIt))
             {
                 return MerchPackRequestStatus.WaitingForEmployeeToTakeIt;
             }

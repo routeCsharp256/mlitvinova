@@ -30,7 +30,7 @@ namespace OzonEdu.MerchandiseService.Domain.BaseTypes
 
             var other = (ValueObject)obj;
 
-            return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
         }
 
         public override int GetHashCode()
@@ -42,7 +42,7 @@ namespace OzonEdu.MerchandiseService.Domain.BaseTypes
 
         public ValueObject GetCopy()
         {
-            return this.MemberwiseClone() as ValueObject;
+            return MemberwiseClone() as ValueObject;
         }
     }
 }

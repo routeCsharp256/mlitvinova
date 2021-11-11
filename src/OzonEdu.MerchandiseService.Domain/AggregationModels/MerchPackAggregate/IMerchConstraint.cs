@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
-using OzonEdu.MerchandiseService.Domain.BaseTypes;
+﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {

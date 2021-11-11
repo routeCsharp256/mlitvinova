@@ -10,7 +10,7 @@ namespace OzonEdu.MerchandiseService.Domain.Tests.Services
         [Fact]
         public async Task ProcessNewArrival_ShouldExecuteCorrectly()
         {
-            await _service.ProcessNewSupportArrival(new List<long>() {1, 2}, CancellationToken.None);
+            await _service.ProcessNewSupplyArrival(new List<long>() {1, 2}, CancellationToken.None);
             
             var unfulfilledRequests = await _merchPackRequestRepo.FindAllAsync(CancellationToken.None);
             Assert.Empty(unfulfilledRequests);

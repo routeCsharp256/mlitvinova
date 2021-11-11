@@ -3,18 +3,21 @@ option csharp_namespace = "OzonEdu.StockApi.Grpc";
 package StockApi;
 
 import "google/protobuf/empty.proto";
-import "google/protobuf/wrappers.proto";
 
 service MerchandiseApiGrpc {
-  rpc GetEmployeeIssuedMerchStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
+  rpc GetMerchIssuedToEmployeeStreaming (GetMerchIssuedToEmployeeRequest) returns (stream GetMerchIssuedToEmployeeResponse);
 
   rpc IssueMerchToEmployee (IssueMerchToEmployeeRequest) returns (google.protobuf.Empty);
 
   rpc GetMerchPackContent (GetMerchPackContentRequest) returns (GetMerchPackContentResponse);
+
+  rpc GiveOutPreparedPack (GiveOutPreparedPackRequest) returns (google.protobuf.Empty);
+  
+  rpc ProcessNewSupplyArrival (ProcessNewSupplyArrivalRequest) returns (google.protobuf.Empty);
 }
 
 message GetMerchIssuedToEmployeeRequest {
-  int64 employee_id = 1;
+  int32 employee_id = 1;
 }
 
 message GetMerchIssuedToEmployeeResponse {
@@ -22,8 +25,9 @@ message GetMerchIssuedToEmployeeResponse {
 }
 
 message IssueMerchToEmployeeRequest {
-  int64 employee_id = 1;
+  int32 employee_id = 1;
   string merch_pack_name = 2;
+  repeated Property constraints = 3;
 }
 
 message GetMerchPackContentRequest {
@@ -32,6 +36,15 @@ message GetMerchPackContentRequest {
 
 message GetMerchPackContentResponse {
   MerchPack merch_pack = 1;
+}
+
+message GiveOutPreparedPackRequest {
+  int32 employee_id = 1;
+  string merch_pack_name = 2;
+}
+
+message ProcessNewSupplyArrivalRequest {
+  repeated int64 sku_ids = 1;
 }
 
 message MerchPackInStatus {
@@ -56,6 +69,7 @@ message Property {
 
 enum MerchPackStatus {
   MERCH_PACK_STATUS_UNDEFINED = 0;
-  MERCH_PACK_STATUS_ISSUED = 1;
-  MERCH_PACK_STATUS_ISSUING = 2;
+  MERCH_PACK_STATUS_COMPLETED = 1;
+  MERCH_PACK_STATUS_WAITING_FOR_EMPLOYEE_TO_TAKE_IT = 2;
+  MERCH_PACK_STATUS__WAITING_FOR_SUPPLIES = 3;
 }

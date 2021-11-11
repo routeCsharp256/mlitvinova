@@ -91,7 +91,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
             waitingRequest.SetRequestToCompleted();
         }
 
-        public async Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token)
+        public async Task ProcessNewSupplyArrival(List<long> skuArrived, CancellationToken token)
         {
             var unfulfilledRequests = await _merchPackRequestRepository.FindAllAsync(token);
             var unmodified = new MerchPackRequest[unfulfilledRequests.Count];
@@ -106,6 +106,12 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
                     unfulfilledRequest.PackConstraints.ToDictionary(x => x.Key(), x => x.Value()),
                     token);
             }
+        }
+        
+        public async Task<MerchPack> GetMerchPackContent(string packName, CancellationToken token)
+        {
+            var merchPackName = new MerchPackName(packName);
+            return await _merchPackRepository.GetMerchPackByName(merchPackName, token);
         }
     }
 }

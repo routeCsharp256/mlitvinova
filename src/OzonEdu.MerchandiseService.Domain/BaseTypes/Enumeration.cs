@@ -9,7 +9,7 @@ namespace OzonEdu.MerchandiseService.Domain.BaseTypes
     {
         public string Name { get; private set; }
 
-        public int Id { get; private set; }
+        public int Id { get; }
 
         protected Enumeration(int id, string name) => (Id, Name) = (id, name);
 
@@ -33,6 +33,11 @@ namespace OzonEdu.MerchandiseService.Domain.BaseTypes
             var valueMatches = Id.Equals(otherValue.Id);
 
             return typeMatches && valueMatches;
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode() ^ Id.GetHashCode();
         }
 
         public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);

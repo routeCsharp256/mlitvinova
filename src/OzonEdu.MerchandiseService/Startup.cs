@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.GrpcServices;
 using OzonEdu.MerchandiseService.Infrastructure.Extensions;
 using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
@@ -22,12 +21,13 @@ namespace OzonEdu.MerchandiseService
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IMerchandiseService, Domain.Services.MerchandiseService>();
-            
             services.AddInfrastructureServices();
             services.AddInfrastructureRepositories();
 
-            services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
+            services.AddGrpc(options =>
+            {
+                options.Interceptors.Add<LoggingInterceptor>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

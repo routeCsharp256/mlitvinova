@@ -6,7 +6,6 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggreg
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
-using OzonEdu.MerchandiseService.Domain.Models;
 using MerchItem = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate.MerchItem;
 using MerchPack = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate.MerchPack;
 

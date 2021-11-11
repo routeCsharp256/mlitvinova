@@ -1,5 +1,4 @@
 ﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate
 {

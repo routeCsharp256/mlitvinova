@@ -5,15 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
-using OzonEdu.MerchandiseService.Domain.Models;
-using OzonEdu.MerchandiseService.Domain.Services.Interfaces;
 using OzonEdu.MerchandiseService.HttpModels;
-using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Exceptions;
 
 namespace OzonEdu.MerchandiseService.Controllers
 {
@@ -22,120 +17,112 @@ namespace OzonEdu.MerchandiseService.Controllers
     [Produces("application/json")]
     public class MerchController : ControllerBase
     {
-        private readonly IMerchandiseService _merchandiseService;
-
         private readonly IMerchRequestDomainService _merchRequestDomainService;
 
-        public MerchController(IMerchandiseService service, IMediator mediator, IMerchRequestDomainService merchRequestDomainService)
+        public MerchController(IMerchRequestDomainService merchRequestDomainService)
         {
-            _merchandiseService = service;
             _merchRequestDomainService = merchRequestDomainService;
         }
 
-        // //[HttpGet("GetMerchIssuedToEmployee")]
-        // public async Task<ActionResult<GetMerchPackIssuedToEmployeeResponse>> GetMerchIssuedToEmployee(
-        //     long employeeId, CancellationToken token)
-        // {
-        //     var merchIssued = await _merchandiseService.GetIssuedMerchToEmployee(employeeId, token);
-        //
-        //     var convertedMerchIssued = new GetMerchPackIssuedToEmployeeResponse()
-        //     {
-        //         MerchList = merchIssued.Select(x =>
-        //         {
-        //             var status = x.Status switch
-        //             {
-        //                 MerchPurchaseStatus.Issued => MerchPackStatus.Issued,
-        //                 MerchPurchaseStatus.Issuing => MerchPackStatus.Issuing,
-        //                 _ => throw new ArgumentOutOfRangeException()
-        //             };
-        //             
-        //             return new MerchandiseService.HttpModels.MerchPackInStatus()
-        //             {
-        //                 MerchPackName = x.MerchPackName,
-        //                 Status = status
-        //             };
-        //         }).ToList()
-        //     };
-        //     
-        //     return Ok(convertedMerchIssued);
-        // }
-        //
-        // //[HttpPost("IssueMerchToEmployee")]
-        // public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployee(
-        //     long employeeId,
-        //     string merchPackName, 
-        //     CancellationToken token)
-        // {
-        //     var status = await _merchandiseService.IssueMerchToEmployee(employeeId, merchPackName, token);
-        //     var requestStatus = status switch
-        //     {
-        //         MerchIssueRequestStatus.EmployeeAlreadyHasSuchMerch => IssueMerchResponse.MerchAlreadyIssued,
-        //         MerchIssueRequestStatus.NoSuchMerchExists => IssueMerchResponse.NoSuchMerch,
-        //         MerchIssueRequestStatus.RequestCreated => IssueMerchResponse.Created,
-        //         _ => IssueMerchResponse.Unknown
-        //     };
-        //     
-        //     var result = new IssueMerchToEmployeeResponse()
-        //     {
-        //         IssueMerchResponse = requestStatus
-        //     };
-        //     
-        //     return Ok(result);
-        // }
-        //
-        // //[HttpGet("GetMerchPackContent")]
-        // public async Task<ActionResult<GetMerchPackDetailsResponse>> GetMerchPackContent(string merchPackName, CancellationToken token)
-        // {
-        //     var merchPackDetails = await _merchandiseService.GetMerchPackContent(merchPackName, token);
-        //
-        //     if (merchPackDetails is null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     var convertedResult = new GetMerchPackDetailsResponse()
-        //     {
-        //         PackName = merchPackDetails.MerchPackName,
-        //         Items = merchPackDetails.PackItems.Select(x => new MerchPackItem()
-        //         {
-        //             Name = x.Name,
-        //             Properties = x.Properties
-        //         }).ToList()
-        //     };
-        //
-        //     return Ok(convertedResult);
-        // }
+        [HttpGet("GetMerchPackContent")]
+        public async Task<ActionResult<GetMerchPackDetailsResponse>> GetMerchPackContent(string merchPackName, CancellationToken token)
+        {
+            var merchPackDetails = await _merchRequestDomainService.GetMerchPackContent(merchPackName, token);
         
-        [HttpPost("IssueMerchToEmployeeV2")]
-        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployeeV2(
+            if (merchPackDetails is null)
+            {
+                return NotFound();
+            }
+        
+            var convertedResult = new GetMerchPackDetailsResponse()
+            {
+                PackName = merchPackDetails.Name.Value,
+                Items = merchPackDetails.MerchPackItems.Select(x => new MerchPackItem()
+                {
+                    Name = x.ItemType.Name,
+                    Properties = x.Constraints.ToDictionary(p => p.Key(), p => p.Value())
+                }).ToList()
+            };
+        
+            return Ok(convertedResult);
+        }
+        
+        [HttpPost("IssueMerchToEmployee")]
+        public async Task<ActionResult<IssueMerchToEmployeeResponse>> IssueMerchToEmployee(
             int employeeId,
             string merchPackName, 
             Dictionary<string, string> constraints,
             CancellationToken token)
         {
-            await _merchRequestDomainService.GiveOutMerch(employeeId, merchPackName, constraints, token);
+            var response = IssueMerchResponse.Created;
+            try
+            {
+                await _merchRequestDomainService.GiveOutMerch(employeeId, merchPackName, constraints, token);
+            }
+            catch (MerchPackNotFoundException)
+            {
+                response = IssueMerchResponse.NoSuchMerch;
+            }
+            catch (MerchAlreadyIssuedException)
+            {
+                response = IssueMerchResponse.MerchAlreadyIssued;
+            }
 
-            return Ok();
+            var result = new IssueMerchToEmployeeResponse()
+            {
+                IssueMerchResponse = response
+            };
+            
+            return Ok(result);
         }
                 
-        [HttpGet("GetMerchIssuedToEmployeeV2")]
-        public async Task<ActionResult<List<MerchIssuedToEmployee>>> GetMerchIssuedToEmployeeV2(
+        [HttpGet("GetMerchIssuedToEmployee")]
+        public async Task<ActionResult<GetMerchPackIssuedToEmployeeResponse>> GetMerchIssuedToEmployee(
             int employeeId, CancellationToken token)
         {
-            var result = await _merchRequestDomainService.GetMerchIssuedToEmployee(employeeId, token);
-            return result;
+            var merchIssued = await _merchRequestDomainService.GetMerchIssuedToEmployee(employeeId, token);
+            
+            var convertedMerchIssued = new GetMerchPackIssuedToEmployeeResponse()
+            {
+                MerchList = merchIssued.Select(x =>
+                {
+                    var status = x.Status switch
+                    {
+                        var s when s.Equals(MerchPackRequestStatus.Completed) 
+                            => MerchPackStatus.Completed,
+                        var s when s.Equals(MerchPackRequestStatus.WaitingForEmployeeToTakeIt) 
+                            => MerchPackStatus.WaitingForEmployeeToTakeIt,
+                        var s when s.Equals(MerchPackRequestStatus.WaitingForSupplies) 
+                            => MerchPackStatus.WaitingForSupplies,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    
+                    return new MerchPackInStatus()
+                    {
+                        MerchPackName = x.Name.Value,
+                        Status = status
+                    };
+                }).ToList()
+            };
+            
+            return convertedMerchIssued;
         }
                         
-        [HttpPost("GiveOutPreparedPackV2")]
-        public async Task GiveOutPreparedPack(int employeeId, string packName, CancellationToken token)
+        [HttpPost("GiveOutPreparedPack")]
+        public async Task<ActionResult<GiveOutPreparedPackResponse>> GiveOutPreparedPack(
+            int employeeId, string packName, CancellationToken token)
         {
             await _merchRequestDomainService.GiveOutPreparedPack(employeeId, packName, token);
+
+            return Ok(new GiveOutPreparedPackResponse() {Status = GiveOutPreparedPackStatus.Ok});
         }
 
-        [HttpPost("ProcessNewSupportArrivalV2")]
-        public async Task ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token)
+        [HttpPost("ProcessNewSupplyArrival")]
+        public async Task<ActionResult<ProcessNewSupplyArrivalResponse>> ProcessNewSupportArrival(List<long> skuArrived, CancellationToken token)
         {
-            await _merchRequestDomainService.ProcessNewSupportArrival(skuArrived, token);
+            await _merchRequestDomainService.ProcessNewSupplyArrival(skuArrived, token);
+            
+            return Ok(new ProcessNewSupplyArrivalResponse() {Status = ProcessNewSupplyArrivalStatus.Ok});
         }
     }
 }
