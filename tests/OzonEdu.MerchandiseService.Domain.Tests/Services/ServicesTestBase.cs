@@ -1,31 +1,26 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using MediatR;
 using Moq;
-using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Commands.CreateMerchRequest;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
-using OzonEdu.MerchandiseService.Infrastructure.Exceptions;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Stubs;
-using Xunit;
 
 namespace OzonEdu.MerchandiseService.Domain.Tests.Services
 {
-    public class MerchRequestDomainServiceTests
+    public class ServicesTestBase
     {
-        private readonly IMerchRequestDomainService _service;
-        private readonly Mock<IMediator> _mediator;
-        private readonly IMerchPackRequestRepository _merchPackRequestRepo;
-        private readonly IMerchPackRequestHistoryEntryRepository _merchPackRequestHistoryEntryRepo;
+        protected readonly IMerchRequestDomainService _service;
+        protected readonly Mock<IMediator> _mediator;
+        protected readonly IMerchPackRequestRepository _merchPackRequestRepo;
+        protected readonly IMerchPackRequestHistoryEntryRepository _merchPackRequestHistoryEntryRepo;
 
-        public MerchRequestDomainServiceTests()
+        public ServicesTestBase()
         {
             var stubData = new StubData();
 
@@ -74,29 +69,6 @@ namespace OzonEdu.MerchandiseService.Domain.Tests.Services
                 merchPackFulfiller,
                 _merchPackRequestHistoryEntryRepo,
                 _mediator.Object);
-        }
-        
-        [Fact]
-        public async Task GiveOutMerch_CorrectMerchRequest_ShouldExecuteSuccessfully()
-        {
-            var employeeId = 3;
-            var merchPackName = "Starter pack";
-            
-            await _service.GiveOutMerch(
-                employeeId, merchPackName, new() { }, CancellationToken.None);
-
-            var repositoryContents = await _merchPackRequestHistoryEntryRepo.FindByEmployeeAsync(
-                new Employee(employeeId),
-                CancellationToken.None);
-
-            Assert.Contains(repositoryContents, x => x.MerchPackName.Value.Equals(merchPackName));
-        }
-
-        [Fact]
-        public async Task GiveOutMerch_MerchAlreadyIssued_ShouldThrow()
-        {
-            await Assert.ThrowsAsync<MerchAlreadyIssuedException>(() =>
-                _service.GiveOutMerch(1, "Starter pack", new() { }, CancellationToken.None));
         }
     }
 }
