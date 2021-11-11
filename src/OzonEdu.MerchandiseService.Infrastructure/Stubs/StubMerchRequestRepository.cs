@@ -43,5 +43,11 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
         {
             return Task.FromResult(_stubData.MerchIssuing.FindAll(x => x.EmployeeId.Equals(employee)));
         }
+
+        public Task DeleteAsync(MerchPackRequest request, CancellationToken cancellationToken = default)
+        {
+            _stubData.MerchIssuing.Remove(request);
+            return Task.CompletedTask;
+        }
     }
 }

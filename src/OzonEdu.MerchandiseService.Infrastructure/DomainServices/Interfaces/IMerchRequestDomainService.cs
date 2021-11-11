@@ -12,5 +12,8 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces
 
         Task<List<MerchIssuedToEmployee>> GetMerchIssuedToEmployee(int employeeId,
             CancellationToken token);
+
+        Task GiveOutPreparedPack(int employeeId, string packName, CancellationToken token);
+
     }
 }

@@ -14,25 +14,38 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggrega
 {
     public class CreateMerchRequestHistoryEntryCommandHandler : IRequestHandler<CreateMerchRequestHistoryEntryCommand>
     {
-        private readonly IMerchPackRequestHistoryEntryRepository _repository;
+        private readonly IMerchPackRequestHistoryEntryRepository _merchPackRequestHistoryEntryRepository;
+        private readonly IMerchPackRequestRepository _merchPackRequestRepository;
 
-        public CreateMerchRequestHistoryEntryCommandHandler(IMerchPackRequestHistoryEntryRepository repository)
+        public CreateMerchRequestHistoryEntryCommandHandler(
+            IMerchPackRequestHistoryEntryRepository merchPackRequestHistoryEntryRepository,
+            IMerchPackRequestRepository merchPackRequestRepository)
         {
-            _repository = repository ?? 
-                          throw new ArgumentNullException($"{nameof(repository)}");
+            _merchPackRequestHistoryEntryRepository = merchPackRequestHistoryEntryRepository ??
+                                                      throw new ArgumentNullException(
+                                                          $"{nameof(merchPackRequestHistoryEntryRepository)}");
+            _merchPackRequestRepository = merchPackRequestRepository ??
+                                          throw new ArgumentNullException($"{nameof(merchPackRequestRepository)}");
         }
 
         public async Task<Unit> Handle(CreateMerchRequestHistoryEntryCommand request, CancellationToken token)
         {
+            var employee = new Employee(request.EmployeeId);
+            var name = new MerchPackName(request.MerchPackName);
+
             var merchPackRequest = new MerchPackRequestHistoryEntry(
-                new Employee(request.EmployeeId),
-                new MerchPackName(request.MerchPackName),
+                employee,
+                name,
                 request.Sku.Select(it => new Sku(it)).ToList(),
                 request.CompletedAt);
-            
-            await _repository.CreateAsync(merchPackRequest, token);
-            await _repository.UnitOfWork.SaveEntitiesAsync(token);
-            
+
+            var issuingRequest = (await _merchPackRequestRepository.FindByEmployeeAsync(employee, token))
+                .First(x => x.MerchPack.Name.Equals(name));
+            await _merchPackRequestRepository.DeleteAsync(issuingRequest, token);
+
+            await _merchPackRequestHistoryEntryRepository.CreateAsync(merchPackRequest, token);
+            await _merchPackRequestHistoryEntryRepository.UnitOfWork.SaveEntitiesAsync(token);
+
             return Unit.Value;
         }
     }

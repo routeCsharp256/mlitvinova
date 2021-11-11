@@ -5,6 +5,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using OzonEdu.MerchandiseService.Domain.BaseTypes;
+using OzonEdu.MerchandiseService.Domain.Events;
 using OzonEdu.MerchandiseService.Domain.Exceptions;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate
@@ -42,6 +43,13 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHi
                     $"Attempting invalid transition from {Status.Name} to {MerchPackRequestHistoryEntryStatus.WaitingForEmployeeToTakeIt.Name}");
             }
             Status = MerchPackRequestHistoryEntryStatus.WaitingForEmployeeToTakeIt;
+            
+            AddMerchPackRequestCompletedEvent();
+        }
+
+        private void AddMerchPackRequestCompletedEvent()
+        {
+            this.AddDomainEvent(new MerchRequestHasBeenCompletedDomainEvent(this));
         }
     }
 }

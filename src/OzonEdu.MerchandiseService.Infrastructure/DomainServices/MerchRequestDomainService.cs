@@ -6,11 +6,10 @@ using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Exceptions;
-using OzonEdu.MerchandiseService.Infrastructure.Extensions;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
-using ConstraintConstructor = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestAggregate.ConstraintConstructor;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
 {
@@ -18,16 +17,20 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
     {
         private readonly IMerchPackRepository _merchPackRepository;
         private readonly MerchRequestFulfiller _merchRequestFulfiller;
+        private readonly IMerchPackRequestHistoryEntryRepository _merchPackRequestHistoryEntryRepository;
+        
         private readonly IMediator _mediator;
 
         public MerchRequestDomainService(
             IMerchPackRepository merchPackRepository,
             MerchRequestFulfiller merchRequestFulfiller,
+            IMerchPackRequestHistoryEntryRepository merchPackRequestHistoryEntryRepository,
             IMediator mediator)
         {
             _merchPackRepository = merchPackRepository;
             _merchRequestFulfiller = merchRequestFulfiller;
             _mediator = mediator;
+            _merchPackRequestHistoryEntryRepository = merchPackRequestHistoryEntryRepository;
         }
 
         public async Task GiveOutMerch(int employeeId, string merchPackName, Dictionary<string, string> constraints,
@@ -39,10 +42,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
             {
                 throw new MerchPackNotFoundException($"Not found: {merchPackName}");
             }
-
-            var merchPack = await _merchPackRepository.GetMerchPackByName(name, token);
-
-            var employee = new Employee(employeeId);
 
             var alreadyReceivedMerch = await _mediator.Send(
                 new GetMerchRequestsByEmployeeQueue()
@@ -71,6 +70,22 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
                 token);
 
             return alreadyReceivedMerch;
+        }
+
+        public async Task GiveOutPreparedPack(int employeeId, string packName, CancellationToken token)
+        {
+            var merchPackName = new MerchPackName(packName);
+            var merchWaitingToBeGivenOut = await _merchPackRequestHistoryEntryRepository.FindByEmployeeAsync(
+                new Employee(employeeId),
+                token);
+
+            var waitingRequest = merchWaitingToBeGivenOut.FirstOrDefault(x => x.MerchPackName.Equals(merchPackName));
+            if (waitingRequest is null)
+            {
+                throw new MerchPackNotPreparedException($"Merch pack {packName} not prepared for employee {employeeId}");
+            }
+            
+            waitingRequest.SetRequestToCompleted();
         }
     }
 }
