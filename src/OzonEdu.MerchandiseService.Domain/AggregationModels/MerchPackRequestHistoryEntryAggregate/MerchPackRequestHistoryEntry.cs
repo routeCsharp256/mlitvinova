@@ -42,7 +42,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHi
                 throw new MerchRequestHistoryEntryStatusException(
                     $"Attempting invalid transition from {Status.Name} to {MerchPackRequestHistoryEntryStatus.WaitingForEmployeeToTakeIt.Name}");
             }
-            Status = MerchPackRequestHistoryEntryStatus.WaitingForEmployeeToTakeIt;
+            Status = MerchPackRequestHistoryEntryStatus.Completed;
             
             AddMerchPackRequestCompletedEvent();
         }
