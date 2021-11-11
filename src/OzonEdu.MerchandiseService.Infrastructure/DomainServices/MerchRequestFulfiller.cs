@@ -54,7 +54,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.DomainServices
                     EmployeeId = request.EmployeeId.Id,
                     MerchPackName = request.MerchPack.Name.Value,
                     Sku = skuList.Select(x => x.Value).ToList()
-                });
+                }, token);
             }
         }
     }

@@ -40,8 +40,11 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggrega
                 request.CompletedAt);
 
             var issuingRequest = (await _merchPackRequestRepository.FindByEmployeeAsync(employee, token))
-                .First(x => x.MerchPack.Name.Equals(name));
-            await _merchPackRequestRepository.DeleteAsync(issuingRequest, token);
+                .FirstOrDefault(x => x.MerchPack.Name.Equals(name));
+            if (issuingRequest is not null)
+            {
+                await _merchPackRequestRepository.DeleteAsync(issuingRequest, token);
+            }
 
             await _merchPackRequestHistoryEntryRepository.CreateAsync(merchPackRequest, token);
             await _merchPackRequestHistoryEntryRepository.UnitOfWork.SaveEntitiesAsync(token);
