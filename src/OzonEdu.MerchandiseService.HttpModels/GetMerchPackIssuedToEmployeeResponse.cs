@@ -20,7 +20,8 @@ namespace OzonEdu.MerchandiseService.HttpModels
 
     public enum MerchPackStatus
     {
-        Issued,
-        Issuing
+        Completed,
+        WaitingForEmployeeToTakeIt,
+        WaitingForSupplies
     }
 }

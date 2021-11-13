@@ -7,11 +7,16 @@ namespace OzonEdu.MerchandiseService.HttpClient
 {
     public interface IMerchandiseHttpClient
     {
-        Task<GetMerchPackDetailsResponse> V1GetMerchPackDetails(string name, CancellationToken token);
-        Task<GetMerchPackIssuedToEmployeeResponse> V1GetMerchIssuedToEmployee(long employeeId, CancellationToken token);
-
-        Task<IssueMerchToEmployeeResponse> V1IssueMerchToEmployee(long employeeId, string merchName,
+        Task<GetMerchPackDetailsResponse> GetMerchPackContent(string name, CancellationToken token);
+        
+        Task<IssueMerchToEmployeeResponse> IssueMerchToEmployee(long employeeId, string merchName,
             CancellationToken token);
+        
+        Task<GetMerchPackIssuedToEmployeeResponse> GetMerchIssuedToEmployee(long employeeId, CancellationToken token);
+
+        Task<GiveOutPreparedPackResponse> GiveOutPreparedPack(int employeeId, string packName, CancellationToken token);
+
+        Task<ProcessNewSupplyArrivalResponse> ProcessNewSupplyArrival(List<long> skuArrived, CancellationToken token);
 
     }
 }
