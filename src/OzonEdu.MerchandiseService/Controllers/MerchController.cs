@@ -40,7 +40,9 @@ namespace OzonEdu.MerchandiseService.Controllers
                 Items = merchPackDetails.MerchPackItems.Select(x => new MerchPackItem()
                 {
                     Name = x.ItemType.Name,
-                    Properties = x.Constraints.ToDictionary(p => p.Key(), p => p.Value())
+                    Properties = x.Constraints.Any() ?
+                        x.Constraints.ToDictionary(p => p.Key(), p => p.Value())
+                        : new Dictionary<string, string>()
                 }).ToList()
             };
         

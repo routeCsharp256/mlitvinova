@@ -9,7 +9,7 @@ using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.MerchRequestAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Stubs;
+using OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs;
 
 namespace OzonEdu.MerchandiseService.Domain.Tests.Services
 {

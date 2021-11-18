@@ -1,4 +1,6 @@
-﻿namespace OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects
+﻿using System;
+
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects
 {
     public class ItemType
     {
@@ -13,6 +15,27 @@
         {
             Name = name;
             IsClothes = isClothes;
+        }
+
+        public static ItemType ToItemType(string name)
+        {
+            switch (name)
+            {
+                case "TShirt":
+                    return TShirt;
+                case "Sweatshirt":
+                    return Sweatshirt;
+                case "Bag":
+                    return Bag;
+                case "Socks":
+                    return Socks;
+                case "Pen":
+                    return Pen;
+                case "Notepad":
+                    return Notepad;
+                default:
+                    throw new Exception($"Unknown merch type {name}");
+            }
         }
         
         public string Name { get; }

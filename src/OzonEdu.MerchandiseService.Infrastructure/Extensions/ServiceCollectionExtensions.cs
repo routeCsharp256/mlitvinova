@@ -7,7 +7,8 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices;
 using OzonEdu.MerchandiseService.Infrastructure.DomainServices.Interfaces;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Stubs;
+using OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation;
+using OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 {
@@ -17,21 +18,23 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
         {
             services.AddMediatR(typeof(CreateMerchRequestHistoryEntryCommandHandler).Assembly);
 
-            services.AddSingleton<MerchRequestFulfiller>();
-            services.AddSingleton<MerchPackRequestFactory>();
-            services.AddSingleton<IMerchRequestDomainService, MerchRequestDomainService>();
+            services.AddScoped<MerchRequestFulfiller>();
+            services.AddScoped<MerchPackRequestFactory>();
+            services.AddScoped<IMerchRequestDomainService, MerchRequestDomainService>();
             
             return services;
         }
         
         public static IServiceCollection AddInfrastructureRepositories(this IServiceCollection services)
         {
-            services.AddSingleton<IStockItemRepository, StubStockItemRepository>();
-            services.AddSingleton<IMerchPackRepository, StubMerchPackRepository>();
-            services.AddSingleton<IMerchPackRequestRepository, StubMerchRequestRepository>();
-            services.AddSingleton<IMerchPackRequestHistoryEntryRepository, StubMerchPackRequestHistoryEntryRepository>();
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             
-            services.AddSingleton<StubData>();
+            services.AddScoped<IStockItemRepository, StubStockItemRepository>();
+            services.AddScoped<IMerchPackRepository, MerchPackRepository>();
+            services.AddScoped<IMerchPackRequestRepository, StubMerchRequestRepository>();
+            services.AddScoped<IMerchPackRequestHistoryEntryRepository, StubMerchPackRequestHistoryEntryRepository>();
+            
+            services.AddScoped<StubData>();
             
             return services;
         }

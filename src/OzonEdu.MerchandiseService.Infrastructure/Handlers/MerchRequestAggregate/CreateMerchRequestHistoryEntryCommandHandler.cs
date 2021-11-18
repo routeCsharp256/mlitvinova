@@ -47,7 +47,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggrega
             }
 
             await _merchPackRequestHistoryEntryRepository.CreateAsync(merchPackRequest, token);
-            await _merchPackRequestHistoryEntryRepository.UnitOfWork.SaveEntitiesAsync(token);
+            await _merchPackRequestHistoryEntryRepository.UnitOfWork.SaveChangesAsync(token);
 
             return Unit.Value;
         }

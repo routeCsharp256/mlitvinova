@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
+namespace OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs
 {
     public class StubMerchPackRepository : IMerchPackRepository
     {

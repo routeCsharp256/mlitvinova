@@ -6,7 +6,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackRequestHistoryEntryAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
+namespace OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs
 {
     public class StubMerchPackRequestHistoryEntryRepository : IMerchPackRequestHistoryEntryRepository
     {
