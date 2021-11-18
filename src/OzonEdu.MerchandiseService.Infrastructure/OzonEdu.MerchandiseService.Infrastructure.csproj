@@ -7,6 +7,8 @@
     <ItemGroup>
       <PackageReference Include="MediatR" Version="9.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="Npgsql" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -15,6 +17,8 @@
 
     <ItemGroup>
       <Folder Include="Handlers\StockItemAggregate" />
+      <Folder Include="Repositories\Implementation" />
+      <Folder Include="Repositories\Models" />
     </ItemGroup>
 
 </Project>

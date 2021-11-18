@@ -6,14 +6,18 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 {
     public class StubUnitOfWork : IUnitOfWork
     {
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public ValueTask StartTransaction(CancellationToken token)
         {
-            return await Task.FromResult(0);
+            return ValueTask.CompletedTask;
         }
 
-        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+        public Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return await Task.FromResult(true);
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

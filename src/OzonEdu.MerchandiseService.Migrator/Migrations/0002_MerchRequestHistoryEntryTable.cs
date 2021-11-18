@@ -10,7 +10,8 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
                     CREATE TABLE if not exists MerchRequestHistoryEntries(
                         id INT PRIMARY KEY,
                         employeeId INT NOT NULL,
-                        merchPackName TEXT NOT NULL);");
+                        merchPackName TEXT NOT NULL,
+                        completedAt DATE);");
         }
 
         public override void Down()

@@ -18,7 +18,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestHistory
         public async Task Handle(MerchRequestHasBeenCompletedDomainEvent notification, CancellationToken token)
         {
             await _repository.UpdateAsync(notification.Entry, token);
-            await _repository.UnitOfWork.SaveEntitiesAsync(token);
+            await _repository.UnitOfWork.SaveChangesAsync(token);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.MerchRequestAggrega
         public async Task<Unit> Handle(CreateMerchRequestEntryCommand request, CancellationToken token)
         {
             await _merchPackRequestRepository.CreateAsync(request.MerchPackRequest, token);
-            await _merchPackRequestRepository.UnitOfWork.SaveEntitiesAsync(token);
+            await _merchPackRequestRepository.UnitOfWork.SaveChangesAsync(token);
 
             return Unit.Value;
         }
