@@ -2,22 +2,20 @@
 
 namespace OzonEdu.MerchandiseService.Migrator.Migrations
 {
-    [Migration(1)]
-    public class MerchRequestTable : Migration
-    {
+    [Migration(2)]
+    public class MerchRequestHistoryEntryTable : Migration {
         public override void Up()
         {
             Execute.Sql(@"
-                    CREATE TABLE if not exists MerchRequests(
+                    CREATE TABLE if not exists MerchRequestHistoryEntries(
                         id INT PRIMARY KEY,
                         employeeId INT NOT NULL,
-                        merchPackName TEXT NOT NULL);"
-            );
+                        merchPackName TEXT NOT NULL);");
         }
 
         public override void Down()
         {
-            Execute.Sql("DROP TABLE if exists MerchRequests;");
+            Execute.Sql("DROP TABLE if exists MerchRequestHistoryEntries;");
         }
     }
 }

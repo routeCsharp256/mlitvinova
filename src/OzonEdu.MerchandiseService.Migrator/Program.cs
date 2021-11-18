@@ -1,21 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentMigrator.Runner;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Npgsql;
+//using Npgsql;
 
 namespace OzonEdu.MerchandiseService.Migrator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -24,6 +19,8 @@ namespace OzonEdu.MerchandiseService.Migrator
                 .Build();
             
             var connectionString = configuration.GetSection("DatabaseConnectionOptions:ConnectionString").Get<string>();
+            Console.Write(connectionString);
+            
             var services = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(
@@ -48,9 +45,9 @@ namespace OzonEdu.MerchandiseService.Migrator
                     runner.MigrateUp();
                 }
 
-                using var connection = new NpgsqlConnection(connectionString);
-                connection.Open();
-                connection.ReloadTypes();
+                // using var connection = new NpgsqlConnection(connectionString);
+                // connection.Open();
+                // connection.ReloadTypes();
             }
         }
     }
