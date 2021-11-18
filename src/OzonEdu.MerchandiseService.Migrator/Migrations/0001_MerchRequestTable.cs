@@ -9,7 +9,7 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
         {
             Execute.Sql(@"
                     CREATE TABLE if not exists MerchRequests(
-                        id INT PRIMARY KEY,
+                        id serial,
                         employeeId INT NOT NULL,
                         merchPackName TEXT NOT NULL);"
             );

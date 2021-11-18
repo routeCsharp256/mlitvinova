@@ -28,28 +28,40 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation
         
         public async Task<MerchPackRequest> CreateAsync(MerchPackRequest itemToCreate, CancellationToken cancellationToken = default)
         {
-            const string sql = @"
+            const string sqlInsertRequest = @"
                 INSERT INTO merchRequests (employeeId, merchPackName)
-                VALUES (@Name, @ItemTypeId, @ClothingSize);";
+                VALUES (@EmployeeId, @MerchPackName)
+                returning requestId;";
 
-            throw new NotImplementedException();
+            var parametersInsertRequest = new
+            {
+                EmployeeId = itemToCreate.EmployeeId.Id,
+                MerchPackName = itemToCreate.MerchPack.Name,
+            };
+            
+            var commandDefinition = new CommandDefinition(
+                sqlInsertRequest,
+                parameters: parametersInsertRequest,
+                commandTimeout: Timeout,
+                cancellationToken: cancellationToken);
+            
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            var id = await connection.QueryAsync<int>(commandDefinition);
 
-            // var parameters = new
-            // {
-            //     EmployeeId = itemToCreate.EmployeeId.Id,
-            //     MerchPackName = itemToCreate.MerchPack.Name,
-            // };
-            //
-            // var commandDefinition = new CommandDefinition(
-            //     sql,
-            //     parameters: parameters,
-            //     commandTimeout: Timeout,
-            //     cancellationToken: cancellationToken);
-            //
-            // var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            // await connection.ExecuteAsync(commandDefinition);
-            // _changeTracker.Track(itemToCreate);
-            // return itemToCreate;
+            foreach (var pair in itemToCreate.PackConstraints)
+            {
+                const string query = @"
+                    INSERT INTO merchRequestConstraints 
+                    VALUES (@RequestId, @Name, @Value)";        
+                connection.Execute(query, new
+                {
+                    RequestId = id,
+                    Name = pair.Key(),
+                    Value = pair.Value()
+                });
+            }
+
+            return itemToCreate;
         }
 
         public Task<MerchPackRequest> UpdateAsync(MerchPackRequest itemToUpdate, CancellationToken cancellationToken = default)

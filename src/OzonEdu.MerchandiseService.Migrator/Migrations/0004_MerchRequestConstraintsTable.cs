@@ -8,7 +8,7 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
         {
             Execute.Sql(@"
                     CREATE TABLE if not exists MerchRequestConstraints(
-                        requestId INT NOT NULL,
+                        requestId int not null,
                         constraintName TEXT NOT NULL,
                         constraintValue TEXT NOT NULL);");
         }
