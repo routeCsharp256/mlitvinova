@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.Contracts;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
+namespace OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs
 {
     public class StubUnitOfWork : IUnitOfWork
     {

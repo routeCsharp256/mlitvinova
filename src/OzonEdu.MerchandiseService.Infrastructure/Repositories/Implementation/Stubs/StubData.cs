@@ -9,7 +9,7 @@ using OzonEdu.MerchandiseService.Domain.AggregationModels.ValueObjects;
 using MerchItem = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate.MerchItem;
 using MerchPack = OzonEdu.MerchandiseService.Domain.AggregationModels.MerchPackAggregate.MerchPack;
 
-namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
+namespace OzonEdu.MerchandiseService.Infrastructure.Repositories.Implementation.Stubs
 {
     public class StubData
     {

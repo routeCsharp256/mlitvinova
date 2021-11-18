@@ -1,17 +1,17 @@
 version: '3.8'
 
 services:
-    merchandise-service:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        environment:
-            DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5428;Database=merchandise-service;Username=postgres;Password=merchandiseServicePassword"
-        hostname: merchandise-service
-        ports:
-            - "8080:80"
-        depends_on:
-            -   merchandise-service-db
+#    merchandise-service:
+#        build:
+#            context: .
+#            dockerfile: Dockerfile
+#        environment:
+#            DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5428;Database=merchandise-service;Username=postgres;Password=merchandiseServicePassword"
+#        hostname: merchandise-service
+#        ports:
+#            - "8080:80"
+#        depends_on:
+#            -   merchandise-service-db
 
 #    supply-service:
 #        image: ghcr.io/ozon-edu-csharp-2021/supply-service:main
