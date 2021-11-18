@@ -9,7 +9,7 @@ namespace OzonEdu.MerchandiseService.Migrator.Migrations
             Execute.Sql(@"
                     CREATE TABLE if not exists MerchItemTypes(
                         id INT PRIMARY KEY,
-                        type TEXT NOT NULL);");
+                        name TEXT NOT NULL);");
         }
 
         public override void Down()

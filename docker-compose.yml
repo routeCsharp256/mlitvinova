@@ -10,6 +10,8 @@ services:
         hostname: merchandise-service
         ports:
             - "8080:80"
+        depends_on:
+            -   merchandise-service-db
 
 #    supply-service:
 #        image: ghcr.io/ozon-edu-csharp-2021/supply-service:main
